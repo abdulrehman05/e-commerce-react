@@ -37,10 +37,17 @@ const Price = () => {
       priceOne: 600.0,
       priceTwo: 1000.0,
     },
+    {
+      _id: 955,
+      priceOne: 1000.0,
+      // priceTwo: 1000.0,
+    },
   ];
 
   const handlePriceClick = (priceOne, priceTwo) => {
-    const range = `${priceOne.toFixed(2)}-${priceTwo.toFixed(2)}`;
+    const range = `${priceOne.toFixed(2)}${
+      priceTwo ? "-" + priceTwo.toFixed(2) : ""
+    }`;
     const currentPrices = searchParams.get("prices")
       ? searchParams.get("prices").split(",")
       : [];
@@ -72,7 +79,8 @@ const Price = () => {
               onClick={() => handlePriceClick(item.priceOne, item.priceTwo)}
               className="border-b-[1px] border-b-[#F0F0F0] pb-2 flex items-center gap-2 hover:text-primeColor hover:border-gray-400 duration-300"
             >
-              ${item.priceOne.toFixed(2)} - ${item.priceTwo.toFixed(2)}
+              ${item.priceOne.toFixed(2)}{" "}
+              {item.priceTwo ? `- $${item.priceTwo.toFixed(2)}` : "<"}
             </li>
           ))}
         </ul>

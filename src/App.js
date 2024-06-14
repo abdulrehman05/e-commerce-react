@@ -44,7 +44,6 @@ const Layout = () => {
 
 const PrivateRoute = ({ element }) => {
   const userInfo = useSelector((state) => state.user.userInfo);
-  console.log({ userInfo });
   return userInfo && userInfo.email && userInfo.token ? (
     element
   ) : (
@@ -58,20 +57,44 @@ const router = createBrowserRouter(
     <Route>
       <Route path="/" element={<PrivateRoute element={<Layout />} />}>
         {/* ==================== Header Navlink Start here =================== */}
-        <Route index element={<Home />}></Route>
-        <Route path="/shop" element={<Shop />}></Route>
-        <Route path="/about" element={<About />}></Route>
-        <Route path="/profile" element={<Profile />}></Route>
-        <Route path="/contact" element={<Contact />}></Route>
+        <Route index element={<PrivateRoute element={<Home />} />}></Route>
+        <Route
+          path="/shop"
+          element={<PrivateRoute element={<Shop />} />}
+        ></Route>
+        <Route
+          path="/about"
+          element={<PrivateRoute element={<About />} />}
+        ></Route>
+        <Route
+          path="/profile"
+          element={<PrivateRoute element={<Profile />} />}
+        ></Route>
+        <Route
+          path="/contact"
+          element={<PrivateRoute element={<Contact />} />}
+        ></Route>
         <Route
           path="/create-product"
           element={<PrivateRoute element={<CreateProduct />} />}
         ></Route>
-        <Route path="/journal" element={<Journal />}></Route>
+        <Route
+          path="/journal"
+          element={<PrivateRoute element={<Journal />} />}
+        ></Route>
         {/* ==================== Header Navlink End here ===================== */}
-        <Route path="/offer" element={<Offer />}></Route>
-        <Route path="/product/:_id" element={<ProductDetails />}></Route>
-        <Route path="/cart" element={<Cart />}></Route>
+        <Route
+          path="/offer"
+          element={<PrivateRoute element={<Offer />} />}
+        ></Route>
+        <Route
+          path="/product/:_id"
+          element={<PrivateRoute element={<ProductDetails />} />}
+        ></Route>
+        <Route
+          path="/cart"
+          element={<PrivateRoute element={<Cart />} />}
+        ></Route>
         <Route
           path="/paymentgateway"
           element={<PrivateRoute element={<Payment />} />}

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import ReactPaginate from "react-paginate";
 import Product from "../../home/Products/Product";
 import { paginationItems } from "../../../constants";
+import { useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 
 const items = paginationItems;
 function Items({ currentItems }) {
@@ -10,15 +12,7 @@ function Items({ currentItems }) {
       {currentItems &&
         currentItems.map((item) => (
           <div key={item._id} className="w-full">
-            <Product
-              _id={item._id}
-              img={item.img}
-              productName={item.productName}
-              price={item.price}
-              color={item.color}
-              badge={item.badge}
-              des={item.des}
-            />
+            <Product product={item?.product} />
           </div>
         ))}
     </>
@@ -35,17 +29,48 @@ const Pagination = ({ itemsPerPage }) => {
   // (This could be items from props; or items loaded in a local state
   // from an API endpoint with useEffect and useState)
   const endOffset = itemOffset + itemsPerPage;
-  //   console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-  const currentItems = items.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(items.length / itemsPerPage);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categories = searchParams.get("categories")
+    ? searchParams.get("categories").split(",")
+    : [];
+  // const colors = searchParams.get("colors")
+  //   ? searchParams.get("colors").split(",")
+  //   : [];
+  // const brands = searchParams.get("brands")
+  //   ? searchParams.get("brands").split(",")
+  //   : [];
+  const prices = searchParams.get("prices")
+    ? searchParams.get("prices").split(",")
+    : [];
+  const { products } = useSelector((state) => state.product);
+  const currentProducts = (products && products.length > 0 ? products : [])
+    .filter((e) =>
+      categories.length > 0 ? categories.includes(e?.product?.category) : true
+    )
+    .filter((e) =>
+      prices.length > 0
+        ? prices.some((price) => {
+            const seperatedPrices = (price && price.split("-")) || [
+              "100",
+              "200",
+            ];
+            const price1 = seperatedPrices[0];
+            const price2 = seperatedPrices[1];
+            return (
+              Number(e?.product?.price) >= Number(price1) &&
+              (price2 ? Number(e?.product?.price) <= Number(price2) : true)
+            );
+          })
+        : true
+    );
+  const currentItems = currentProducts.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(products.length / itemsPerPage);
 
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % items.length;
     setItemOffset(newOffset);
-    // console.log(
-    //   `User requested page number ${event.selected}, which is offset ${newOffset},`
-    // );
     setItemStart(newOffset);
   };
 
@@ -69,8 +94,11 @@ const Pagination = ({ itemsPerPage }) => {
         />
 
         <p className="text-base font-normal text-lightText">
-          Products from {itemStart === 0 ? 1 : itemStart} to {endOffset} of{" "}
-          {items.length}
+          Products from {itemStart === 0 ? 1 : itemStart} to{" "}
+          {endOffset <= currentProducts?.length || 0
+            ? endOffset
+            : currentProducts?.length || 0}{" "}
+          of {currentProducts.length}
         </p>
       </div>
     </div>

@@ -6,20 +6,22 @@ import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import { resetCart } from "../../redux/orebiSlice";
 import { emptyCart } from "../../assets/images/index";
 import ItemCard from "./ItemCard";
+import { emptyAllFromCart, getCart } from "../../redux/actionReducers";
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.orebiReducer.products);
+  const { products } = useSelector((state) => state.product);
+  const cart = useSelector((state) => state.cart.cartItems);
   const [totalAmt, setTotalAmt] = useState("");
   const [shippingCharge, setShippingCharge] = useState("");
-  useEffect(() => {
-    let price = 0;
-    products.map((item) => {
-      price += item.price * item.quantity;
-      return price;
-    });
-    setTotalAmt(price);
-  }, [products]);
+  // useEffect(() => {
+  //   let price = 0;
+  //   products.map((item) => {
+  //     price += item.price * item.quantity;
+  //     return price;
+  //   });
+  //   setTotalAmt(price);
+  // }, [products]);
   useEffect(() => {
     if (totalAmt <= 200) {
       setShippingCharge(30);
@@ -29,10 +31,16 @@ const Cart = () => {
       setShippingCharge(20);
     }
   }, [totalAmt]);
+  const removeAllFromCart = async () => {
+    try {
+      await dispatch(emptyAllFromCart());
+      await dispatch(getCart());
+    } catch (error) {}
+  };
   return (
     <div className="max-w-container mx-auto px-4">
       <Breadcrumbs title="Cart" />
-      {products.length > 0 ? (
+      {cart.length > 0 ? (
         <div className="pb-20">
           <div className="w-full h-20 bg-[#F5F7F7] text-primeColor hidden lgl:grid grid-cols-5 place-content-center px-6 text-lg font-titleFont font-semibold">
             <h2 className="col-span-2">Product</h2>
@@ -41,15 +49,21 @@ const Cart = () => {
             <h2>Sub Total</h2>
           </div>
           <div className="mt-5">
-            {products.map((item) => (
-              <div key={item._id}>
-                <ItemCard item={item} />
-              </div>
-            ))}
+            {cart.map((item) => {
+              const product = products.find(
+                (e) => e?.product?._id === item?.productId
+              );
+
+              return (
+                <div key={product?.product._id}>
+                  <ItemCard product={product?.product} item={item} />
+                </div>
+              );
+            })}
           </div>
 
           <button
-            onClick={() => dispatch(resetCart())}
+            onClick={() => removeAllFromCart()}
             className="py-2 px-10 bg-red-500 text-white font-semibold uppercase mb-4 hover:bg-red-700 duration-300"
           >
             Reset cart

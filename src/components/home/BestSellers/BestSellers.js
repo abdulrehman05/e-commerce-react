@@ -7,48 +7,23 @@ import {
   bestSellerThree,
   bestSellerFour,
 } from "../../../assets/images/index";
+import { useSelector } from "react-redux";
 
 const BestSellers = () => {
+  const { products } = useSelector((state) => state.product);
   return (
     <div className="w-full pb-20">
       <Heading heading="Our Bestsellers" />
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lgl:grid-cols-3 xl:grid-cols-4 gap-10">
-        <Product
-          _id="1011"
-          img={bestSellerOne}
-          productName="Hand Made"
-          price="35.00"
-          color="Blank and White"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1012"
-          img={bestSellerTwo}
-          productName="Hand Made"
-          price="180.00"
-          color="Gray"
-          badge={false}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1013"
-          img={bestSellerThree}
-          productName="Hand Made"
-          price="25.00"
-          color="Mixed"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1014"
-          img={bestSellerFour}
-          productName="Hand Made"
-          price="220.00"
-          color="Black"
-          badge={false}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
+        {products &&
+          products.length > 0 &&
+          products
+            .sort(() => Math.random() - 0.5)
+            .map((item) => (
+              <div key={item._id} className="px-2">
+                <Product product={item?.product} />
+              </div>
+            ))}
       </div>
     </div>
   );

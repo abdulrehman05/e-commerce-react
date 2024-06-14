@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import { useDispatch } from "react-redux";
-import { createProduct } from "../../redux/actionReducers";
+import { createProduct, fetchProducts } from "../../redux/actionReducers";
 
 const CreateProduct = () => {
   const [formData, setFormData] = useState({
-    img: "",
+    profileImage: "",
     productName: "",
     price: "",
     color: "",
     description: "",
+    category: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -27,32 +28,53 @@ const CreateProduct = () => {
     });
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setFormData({
+      ...formData,
+      profileImage: file,
+    });
+  };
+
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.img) newErrors.img = "Enter an image URL";
+    if (!formData.profileImage) newErrors.profileImage = "Select an image file";
     if (!formData.productName) newErrors.productName = "Enter the product name";
     if (!formData.price) newErrors.price = "Enter the product price";
     if (!formData.color) newErrors.color = "Select a color";
     if (!formData.description) newErrors.description = "Enter a description";
+    if (!formData.category) newErrors.category = "Enter a category";
     return newErrors;
   };
 
-  const dispatch= useDispatch()
-  const handlePost = async(e) => {
+  const dispatch = useDispatch();
+  const handlePost = async (e) => {
     try {
-      
-    e.preventDefault();
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-    } else {
-      dispatch(createProduct({...formData,image_url:formData.img,title:formData.productName}))
-      setSuccessMsg(
-        `Product ${formData.productName} has been created successfully.`
-      );
-    }
+      e.preventDefault();
+      const newErrors = validateForm();
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+      } else {
+        const formDataCopy = { ...formData };
+
+        const asd = {
+          ...formData,
+          image_url: formData.img,
+          title: formData.productName,
+        };
+        const formDataToSend = new FormData();
+        Object.keys(asd).forEach((key) => {
+          formDataToSend.append(key, asd[key]);
+        });
+
+        await dispatch(createProduct(formDataToSend));
+        setSuccessMsg(
+          `Product ${formData.productName} has been created successfully.`
+        );
+        await dispatch(fetchProducts());
+      }
     } catch (error) {
-      
+      setErrors({ description: error.message });
     }
   };
 
@@ -68,24 +90,27 @@ const CreateProduct = () => {
           </h1>
           <div className="w-[500px] h-auto py-6 flex flex-col gap-6">
             <div>
-              <p className="text-base font-titleFont font-semibold px-2">Image URL</p>
+              <p className="text-base font-titleFont font-semibold px-2">
+                Image File
+              </p>
               <input
-                name="img"
-                onChange={handleChange}
-                value={formData.img}
-                className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
-                type="text"
-                placeholder="Enter image URL here"
+                name="profileImage"
+                onChange={handleImageChange}
+                accept="image/*"
+                className="w-full h-8 text-base font-medium rounded-md border-gray-400 outline-none"
+                type="file"
               />
-              {errors.img && (
+              {errors.profileImage && (
                 <p className="text-red-500 text-sm font-titleFont font-semibold mt-1 px-2 flex items-center gap-1">
                   <span className="text-sm italic font-bold">!</span>
-                  {errors.img}
+                  {errors.profileImage}
                 </p>
               )}
             </div>
             <div>
-              <p className="text-base font-titleFont font-semibold px-2">Product Name</p>
+              <p className="text-base font-titleFont font-semibold px-2">
+                Product Name
+              </p>
               <input
                 name="productName"
                 onChange={handleChange}
@@ -102,7 +127,9 @@ const CreateProduct = () => {
               )}
             </div>
             <div>
-              <p className="text-base font-titleFont font-semibold px-2">Price</p>
+              <p className="text-base font-titleFont font-semibold px-2">
+                Price
+              </p>
               <input
                 name="price"
                 onChange={handleChange}
@@ -119,7 +146,9 @@ const CreateProduct = () => {
               )}
             </div>
             <div>
-              <p className="text-base font-titleFont font-semibold px-2">Color</p>
+              <p className="text-base font-titleFont font-semibold px-2">
+                Color
+              </p>
               <select
                 name="color"
                 onChange={handleChange}
@@ -141,7 +170,28 @@ const CreateProduct = () => {
               )}
             </div>
             <div>
-              <p className="text-base font-titleFont font-semibold px-2">Description</p>
+              <p className="text-base font-titleFont font-semibold px-2">
+                Category
+              </p>
+              <input
+                name="category"
+                onChange={handleChange}
+                value={formData.category}
+                className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
+                type="text"
+                placeholder="Enter category here"
+              />
+              {errors.category && (
+                <p className="text-red-500 text-sm font-titleFont font-semibold mt-1 px-2 flex items-center gap-1">
+                  <span className="text-sm italic font-bold">!</span>
+                  {errors.category}
+                </p>
+              )}
+            </div>
+            <div>
+              <p className="text-base font-titleFont font-semibold px-2">
+                Description
+              </p>
               <textarea
                 name="description"
                 onChange={handleChange}

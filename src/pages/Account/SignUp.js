@@ -43,6 +43,13 @@ const SignUp = () => {
       .toLowerCase()
       .match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
   };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setFormData((prevState) => ({
+      ...prevState,
+      profileImage: file,
+    }));
+  };
   // ================= Email Validation End here ===============
   const dispatch = useDispatch();
   const handleSignUp = async (e) => {
@@ -65,8 +72,8 @@ const SignUp = () => {
         }
         if (!formData.password) {
           newErrors.password = "Create a password";
-        } else if (formData.password.length < 6) {
-          newErrors.password = "Passwords must be at least 6 characters";
+        } else if (formData.password.length < 8) {
+          newErrors.password = "Passwords must be at least 8 characters";
         }
         if (!formData.address) {
           newErrors.address = "Enter your address";
@@ -86,20 +93,12 @@ const SignUp = () => {
           return;
         }
 
-        await dispatch(
-          signupUser({
-            address: formData.address,
-            city: formData.city,
-            country: formData.country,
-            zipCode: formData.zip,
-            // type:type,
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            phoneNo: formData.phone,
-            password: formData.password,
-          })
-        );
+        const formDataToSend = new FormData();
+        Object.keys(formData).forEach((key) => {
+          formDataToSend.append(key, formData[key]);
+        });
+
+        await dispatch(signupUser(formDataToSend));
 
         setSuccessMsg(
           `Hello dear ${formData.firstName} ${formData.lastName}, Welcome to the OREBI Admin panel. We received your sign-up request. We are processing to validate your access. Stay connected, and additional assistance will be sent to you via email at ${formData.email}`
@@ -120,7 +119,6 @@ const SignUp = () => {
       console.error(error);
     }
   };
-
   const router = useNavigate();
   const userInfo = useSelector((state) => state.user.userInfo);
   useEffect(() => {
@@ -256,6 +254,24 @@ const SignUp = () => {
                     </p>
                   )}
                 </div>
+                <div className="flex flex-col gap-.5">
+                  <p className="font-titleFont text-base font-semibold text-gray-600">
+                    Profile Picture
+                  </p>
+                  <input
+                    name="profileImage"
+                    onChange={handleImageChange}
+                    accept="image/*"
+                    className="w-full h-8 text-base font-medium rounded-md border-gray-400 outline-none"
+                    type="file"
+                  />
+                  {errors.profileImage && (
+                    <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
+                      <span className="font-bold italic mr-1">!</span>
+                      {errors.profileImage}
+                    </p>
+                  )}
+                </div>
                 {/* Email */}
                 <div className="flex flex-col gap-.5">
                   <p className="font-titleFont text-base font-semibold text-gray-600">
@@ -307,7 +323,7 @@ const SignUp = () => {
                     value={formData.password}
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                     type="password"
-                    placeholder="at least 6 characters"
+                    placeholder="at least 8 characters"
                   />
                   {errors.password && (
                     <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
@@ -414,7 +430,6 @@ const SignUp = () => {
                 </div>
                 <button
                   onClick={(e) => {
-                    console.log({ checked });
                     if (checked) {
                       handleSignUp();
                     }

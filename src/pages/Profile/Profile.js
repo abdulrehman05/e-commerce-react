@@ -1,11 +1,75 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import { Link } from "react-router-dom";
+import { updateUser } from "../../redux/actionReducers";
 
 const Profile = () => {
   const userInfo = useSelector((state) => state.user.userInfo);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editInfo, setEditInfo] = useState({
+    firstName: userInfo.name.firstName,
+    lastName: userInfo.name.lastName,
+    email: userInfo.email,
+    phoneNo: userInfo.phoneNo,
+    address: userInfo.address,
+    city: userInfo.city,
+    country: userInfo.country,
+    zipCode: userInfo.zipCode,
+  });
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const handleSave = async () => {
+    try {
+      setLoading(true);
 
+      const formDataToSend = new FormData();
+      Object.keys(editInfo).forEach((key) => {
+        formDataToSend.append(key, editInfo[key]);
+      });
+
+      await dispatch(updateUser(formDataToSend));
+      setIsEditing(false);
+      setLoading(false);
+    } catch (error) {}
+    // Perform save logic here, like dispatching an action to update the user info
+  };
+
+  useEffect(() => {
+    handleCancel();
+  }, [userInfo]);
+  const handleCancel = () => {
+    setEditInfo({
+      firstName: userInfo.name.firstName,
+      lastName: userInfo.name.lastName,
+      email: userInfo.email,
+      phoneNo: userInfo.phoneNo,
+      address: userInfo.address,
+      city: userInfo.city,
+      country: userInfo.country,
+      zipCode: userInfo.zipCode,
+    });
+    setIsEditing(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditInfo((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setEditInfo((prevState) => ({
+      ...prevState,
+      profileImage: file,
+    }));
+  };
   return (
     <div className="max-w-container mx-auto px-4">
       <Breadcrumbs title="Profile" />
@@ -15,41 +79,181 @@ const Profile = () => {
             User Profile
           </span>
         </h1>
-        <div className="max-w-[600px] text-base text-lightText mb-2">
+        <div className="flex flex-col gap-5 max-w-[600px] text-base text-lightText mb-2">
           <p>
-            <strong>First Name:</strong> {userInfo.name.firstName}
+            <strong>Profile Picture:</strong>{" "}
+            {isEditing ? (
+              <input
+                name="profileImage"
+                onChange={handleImageChange}
+                accept="image/*"
+                className="w-full h-8 text-base font-medium rounded-md border-gray-400 outline-none"
+                type="file"
+              />
+            ) : (
+              <img
+                src={
+                  process.env.REACT_APP_BACKEND_IMAGE_LINK +
+                  userInfo.profileImageName
+                }
+                height={120}
+                style={{
+                  height: "120px",
+                  width: "120px",
+                  objectFit: "cover",
+                  borderRadius: "100%",
+                }}
+              ></img>
+            )}
           </p>
           <p>
-            <strong>Last Name:</strong> {userInfo.name.lastName}
+            <strong>First Name:</strong>{" "}
+            {isEditing ? (
+              <input
+                type="text"
+                name="firstName"
+                value={editInfo.firstName}
+                onChange={handleChange}
+                className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
+              />
+            ) : (
+              userInfo.name.firstName
+            )}
           </p>
           <p>
-            <strong>Email:</strong> {userInfo.email}
+            <strong>Last Name:</strong>{" "}
+            {isEditing ? (
+              <input
+                type="text"
+                name="lastName"
+                value={editInfo.lastName}
+                onChange={handleChange}
+                className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
+              />
+            ) : (
+              userInfo.name.lastName
+            )}
+          </p>
+          <p>
+            <strong>Email:</strong>{" "}
+            {/* {isEditing ? (
+              <input
+                type="email"
+                name="email"
+                value={editInfo.email}
+                onChange={handleChange}
+                className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
+              />
+            ) : ( */}
+            {userInfo.email}
+            {/* // )} */}
           </p>
           <p>
             <strong>Email Verified:</strong>{" "}
             {userInfo.emailVerification ? "Yes" : "No"}
           </p>
           <p>
-            <strong>Phone Number:</strong> {userInfo.phoneNo}
+            <strong>Phone Number:</strong>{" "}
+            {isEditing ? (
+              <input
+                type="text"
+                name="phoneNo"
+                value={editInfo.phoneNo}
+                onChange={handleChange}
+                className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
+              />
+            ) : (
+              userInfo.phoneNo
+            )}
           </p>
           <p>
-            <strong>Address:</strong> {userInfo.address}
+            <strong>Address:</strong>{" "}
+            {isEditing ? (
+              <input
+                type="text"
+                name="address"
+                value={editInfo.address}
+                onChange={handleChange}
+                className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
+              />
+            ) : (
+              userInfo.address
+            )}
           </p>
           <p>
-            <strong>City:</strong> {userInfo.city}
+            <strong>City:</strong>{" "}
+            {isEditing ? (
+              <input
+                type="text"
+                name="city"
+                value={editInfo.city}
+                onChange={handleChange}
+                className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
+              />
+            ) : (
+              userInfo.city
+            )}
           </p>
           <p>
-            <strong>Country:</strong> {userInfo.country}
+            <strong>Country:</strong>{" "}
+            {isEditing ? (
+              <input
+                type="text"
+                name="country"
+                value={editInfo.country}
+                onChange={handleChange}
+                className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
+              />
+            ) : (
+              userInfo.country
+            )}
           </p>
           <p>
-            <strong>Zip Code:</strong> {userInfo.zipCode}
+            <strong>Zip Code:</strong>{" "}
+            {isEditing ? (
+              <input
+                type="text"
+                name="zipCode"
+                value={editInfo.zipCode}
+                onChange={handleChange}
+                className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
+              />
+            ) : (
+              userInfo.zipCode
+            )}
           </p>
         </div>
-        <Link to="/shop">
-          <button className="w-52 h-10 bg-primeColor text-white hover:bg-black duration-300">
+        {isEditing ? (
+          <div>
+            <button
+              onClick={handleSave}
+              className={
+                "w-24 h-10 bg-primeColor text-white hover:bg-black duration-300 " +
+                (loading ? " bg-gray" : "")
+              }
+            >
+              Save
+            </button>
+            <button
+              onClick={handleCancel}
+              className="w-24 h-10 bg-red-500 text-white hover:bg-red-700 duration-300 ml-2"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={handleEdit}
+            className="w-24 h-10 bg-primeColor text-white hover:bg-black duration-300"
+          >
+            Edit
+          </button>
+        )}
+        {/* <Link to="/shop">
+          <button className="w-52 h-10 bg-primeColor text-white hover:bg-black duration-300 ml-2">
             Continue Shopping
           </button>
-        </Link>
+        </Link> */}
       </div>
     </div>
   );

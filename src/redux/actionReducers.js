@@ -51,7 +51,7 @@ export const fetchProducts = () => async (dispatch, getState) => {
         headers: headers,
       }
     );
-    dispatch({ type: GET_PRODUCTS_SUCCESS, payload: data });
+    dispatch({ type: GET_PRODUCTS_SUCCESS, payload: data?.data });
   } catch (error) {
     dispatch({
       type: GET_PRODUCTS_FAIL,
@@ -105,13 +105,48 @@ export const signupUser = (userDetails) => async (dispatch) => {
     throw error;
   }
 };
-
-export const createProduct = (productDetails) => async (dispatch) => {
+export const updateUser = (userDetails) => async (dispatch, getState) => {
   try {
+    // dispatch({ type: SIGNUP_USER_REQUEST });
+    const headers = {
+      Authorization: getState().user.userInfo.token,
+    };
+    const { data } = await axios.post(
+      process.env.REACT_APP_BACKEND + "/api/auth/update",
+      userDetails,
+      { headers }
+    );
+    localStorage.setItem(
+      "userInfo",
+      JSON.stringify({ ...getState().user.userInfo, ...data?.data })
+    );
+    await dispatch({
+      type: LOGIN_USER_SUCCESS,
+      payload: { ...getState().user.userInfo, ...data?.data },
+    });
+    // dispatch({ type: SIGNUP_USER_SUCCESS, payload: data });
+  } catch (error) {
+    // dispatch({
+    //   type: SIGNUP_USER_FAIL,
+    //   payload:
+    //     error.response && error.response.data.message
+    //       ? error.response.data.message
+    //       : error.message,
+    // });
+    throw error;
+  }
+};
+
+export const createProduct = (productDetails) => async (dispatch, getState) => {
+  try {
+    const headers = {
+      Authorization: getState().user.userInfo.token,
+    };
     dispatch({ type: CREATE_PRODUCT_REQUEST });
     const { data } = await axios.post(
-      process.env.REACT_APP_BACKEND + "/api/product/create",
-      productDetails
+      process.env.REACT_APP_BACKEND + "/api/products/create",
+      productDetails,
+      { headers }
     );
     dispatch({ type: CREATE_PRODUCT_SUCCESS, payload: data });
   } catch (error) {
@@ -136,7 +171,7 @@ export const getCart = () => async (dispatch, getState) => {
       process.env.REACT_APP_BACKEND + "/api/cart/getCart",
       { headers }
     );
-    dispatch({ type: GET_CART_SUCCESS, payload: data });
+    dispatch({ type: GET_CART_SUCCESS, payload: data?.data?.items });
   } catch (error) {
     dispatch({
       type: GET_CART_FAIL,
@@ -149,18 +184,65 @@ export const getCart = () => async (dispatch, getState) => {
   }
 };
 
-export const addToCart = (productId) => async (dispatch, getState) => {
+export const addToCart =
+  (productId, quantity) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: ADD_TO_CART_REQUEST });
+      const headers = {
+        Authorization: getState().user.userInfo.token,
+      };
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND}/api/cart/${productId}/add`,
+        { quantity },
+        { headers }
+      );
+      dispatch({ type: ADD_TO_CART_SUCCESS });
+    } catch (error) {
+      dispatch({
+        type: ADD_TO_CART_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+      throw error;
+    }
+  };
+export const decreaseFromCart =
+  (productId, quantity) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: ADD_TO_CART_REQUEST });
+      const headers = {
+        Authorization: getState().user.userInfo.token,
+      };
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND}/api/cart/${productId}/decrease`,
+        { quantity },
+        { headers }
+      );
+      dispatch({ type: ADD_TO_CART_SUCCESS });
+    } catch (error) {
+      dispatch({
+        type: ADD_TO_CART_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+      throw error;
+    }
+  };
+export const emptyAllFromCart = () => async (dispatch, getState) => {
   try {
     dispatch({ type: ADD_TO_CART_REQUEST });
     const headers = {
       Authorization: getState().user.userInfo.token,
     };
     await axios.post(
-      `${process.env.REACT_APP_BACKEND}/api/cart/${productId}/add`,
+      `${process.env.REACT_APP_BACKEND}/api/cart/empty-cart`,
       {},
       { headers }
     );
-    dispatch(getCart()); // Fetch the updated cart
     dispatch({ type: ADD_TO_CART_SUCCESS });
   } catch (error) {
     dispatch({
