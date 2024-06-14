@@ -1,33 +1,49 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers } from "redux";
 import {
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from "redux-persist";
-import storage from "redux-persist/lib/storage";
-import orebiReducer from "./orebiSlice";
+  userReducer,
+  productReducer,
+  createProductReducer,
+  cartReducer,
+  checkoutReducer,
+  signupReducer,
+} from "./actionReducers";
+import orebiSlice from "./orebiSlice";
 
-const persistConfig = {
-  key: "root",
-  version: 1,
-  storage,
+// actionTypes.js
+export const LOGOUT = "LOGOUT";
+
+// actionCreators.js
+export const logout = () => {
+  localStorage.removeItem("userInfo");
+  return { type: LOGOUT };
 };
 
-const persistedReducer = persistReducer(persistConfig, orebiReducer);
-
-export const store = configureStore({
-  reducer: { orebiReducer: persistedReducer },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
+const appReducer = combineReducers({
+  product: productReducer,
+  user: userReducer,
+  orebiReducer: orebiSlice,
+  signup: signupReducer,
+  createProduct: createProductReducer,
+  cart: cartReducer,
+  checkout: checkoutReducer,
 });
 
-export let persistor = persistStore(store);
+const rootReducer = (state, action) => {
+  if (action.type === LOGOUT) {
+    // Map each key in the state to an empty object
+    state = Object.keys(state).reduce((newState, key) => {
+      newState[key] = {};
+      return newState;
+    }, {});
+  }
+  return appReducer(state, action);
+};
+
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});

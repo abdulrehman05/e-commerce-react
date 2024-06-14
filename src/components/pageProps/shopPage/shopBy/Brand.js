@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import NavTitle from "./NavTitle";
 
 const Brand = () => {
   const [showBrands, setShowBrands] = useState(true);
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const brands = [
     {
       _id: 9006,
@@ -27,6 +31,27 @@ const Brand = () => {
     },
   ];
 
+  const handleBrandClick = (title) => {
+    const currentBrands = searchParams.get("brands")
+      ? searchParams.get("brands").split(",")
+      : [];
+    const brandIndex = currentBrands.indexOf(title);
+    if (brandIndex >= 0) {
+      // Brand already selected, remove it
+      currentBrands.splice(brandIndex, 1);
+    } else {
+      // Brand not selected, add it
+      currentBrands.push(title);
+    }
+    if (currentBrands.length > 0) {
+      searchParams.set("brands", currentBrands.join(","));
+    } else {
+      searchParams.delete("brands");
+    }
+    setSearchParams(searchParams);
+    navigate(`?${searchParams.toString()}`);
+  };
+
   return (
     <div>
       <div
@@ -45,7 +70,8 @@ const Brand = () => {
             {brands.map((item) => (
               <li
                 key={item._id}
-                className="border-b-[1px] border-b-[#F0F0F0] pb-2 flex items-center gap-2 hover:text-primeColor hover:border-gray-400 duration-300"
+                onClick={() => handleBrandClick(item.title)}
+                className="border-b-[1px] border-b-[#F0F0F0] pb-2 flex items-center gap-2 hover:text-primeColor hover:border-gray-400 duration-300 cursor-pointer"
               >
                 {item.title}
               </li>

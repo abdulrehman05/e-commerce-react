@@ -4,11 +4,12 @@ import { HiOutlineMenuAlt4 } from "react-icons/hi";
 import { FaSearch, FaUser, FaCaretDown, FaShoppingCart } from "react-icons/fa";
 import Flex from "../../designLayouts/Flex";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { paginationItems } from "../../../constants";
+import { LOGOUT, logout } from "../../../redux/store";
 
 const HeaderBottom = () => {
-  const products = useSelector((state) => state.orebiReducer.products);
+  const cart = useSelector((state) => state.cart);
   const [show, setShow] = useState(false);
   const [showUser, setShowUser] = useState(false);
   const navigate = useNavigate();
@@ -26,7 +27,8 @@ const HeaderBottom = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [showSearchBar, setShowSearchBar] = useState(false);
-
+  const state = useSelector((state) => state);
+  console.log({ state });
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -37,7 +39,7 @@ const HeaderBottom = () => {
     );
     setFilteredProducts(filtered);
   }, [searchQuery]);
-
+  const dispatch = useDispatch();
   return (
     <div className="w-full bg-[#F5F5F3] relative">
       <div className="max-w-container mx-auto">
@@ -152,11 +154,21 @@ const HeaderBottom = () => {
                     Sign Up
                   </li>
                 </Link>
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Profile
-                </li>
+                <Link to="/profile">
+                  <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
+                    Profile
+                  </li>
+                </Link>
                 <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400  hover:border-b-white hover:text-white duration-300 cursor-pointer">
                   Others
+                </li>
+                <li
+                  onClick={() => {
+                    dispatch(logout());
+                  }}
+                  className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400  hover:border-b-white hover:text-white duration-300 cursor-pointer"
+                >
+                  Log out
                 </li>
               </motion.ul>
             )}
@@ -164,7 +176,9 @@ const HeaderBottom = () => {
               <div className="relative">
                 <FaShoppingCart />
                 <span className="absolute font-titleFont top-3 -right-2 text-xs w-4 h-4 flex items-center justify-center rounded-full bg-primeColor text-white">
-                  {products.length > 0 ? products.length : 0}
+                  {cart?.cartItems && cart?.cartItems.length > 0
+                    ? cart?.cartItems.length
+                    : 0}
                 </span>
               </div>
             </Link>

@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logoLight } from "../../assets/images";
+import { loginUser } from "../../redux/actionReducers";
+import { useDispatch, useSelector } from "react-redux";
 
 const SignIn = () => {
   // ============= Initial State Start here =============
@@ -24,25 +26,42 @@ const SignIn = () => {
     setErrPassword("");
   };
   // ============= Event Handler End here ===============
-  const handleSignUp = (e) => {
-    e.preventDefault();
+  const router = useNavigate();
+  const userInfo = useSelector((state) => state.user.userInfo);
+  const state = useSelector((state) => state);
+  console.log({ state });
+  const dispatch = useDispatch();
+  const handleSignIn = async (e) => {
+    try {
+      e.preventDefault();
 
-    if (!email) {
-      setErrEmail("Enter your email");
-    }
+      if (!email) {
+        setErrEmail("Enter your email");
+      }
 
-    if (!password) {
-      setErrPassword("Create a password");
-    }
-    // ============== Getting the value ==============
-    if (email && password) {
-      setSuccessMsg(
-        `Hello dear, Thank you for your attempt. We are processing to validate your access. Till then stay connected and additional assistance will be sent to you by your mail at ${email}`
-      );
-      setEmail("");
-      setPassword("");
+      if (!password) {
+        setErrPassword("Create a password");
+      }
+      // ============== Getting the value ==============
+      if (email && password) {
+        // setSuccessMsg(
+        //   `Hello dear, Thank you for your attempt. We are processing to validate your access. Till then stay connected and additional assistance will be sent to you by your mail at ${email}`
+        // );
+        await dispatch(loginUser({ email, password }));
+        router("/");
+        setEmail("");
+        setPassword("");
+      }
+    } catch (err) {
+      setErrPassword(err.message);
     }
   };
+
+  useEffect(() => {
+    if (userInfo && userInfo.email && userInfo.token) {
+      router("/");
+    }
+  }, [userInfo]);
   return (
     <div className="w-full h-screen flex items-center justify-center">
       <div className="w-1/2 hidden lgl:inline-flex h-full text-white">
@@ -174,7 +193,7 @@ const SignIn = () => {
                 </div>
 
                 <button
-                  onClick={handleSignUp}
+                  onClick={handleSignIn}
                   className="bg-primeColor hover:bg-black text-gray-200 hover:text-white cursor-pointer w-full text-base font-medium h-10 rounded-md  duration-300"
                 >
                   Sign In

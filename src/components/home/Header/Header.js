@@ -7,6 +7,8 @@ import { logo, logoLight } from "../../../assets/images";
 import Image from "../../designLayouts/Image";
 import { navBarList } from "../../../constants";
 import Flex from "../../designLayouts/Flex";
+import { fetchProducts, getCart } from "../../../redux/actionReducers";
+import { useDispatch } from "react-redux";
 
 const Header = () => {
   const [showMenu, setShowMenu] = useState(true);
@@ -25,7 +27,14 @@ const Header = () => {
     ResponsiveMenu();
     window.addEventListener("resize", ResponsiveMenu);
   }, []);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    try {
+      dispatch(fetchProducts());
+      dispatch(getCart());
+    } catch (error) {}
+  }, []);
   return (
     <div className="w-full h-20 bg-white sticky top-0 z-50 border-b-[1px] border-b-gray-200">
       <nav className="h-full px-4 max-w-container mx-auto relative">
