@@ -72,10 +72,10 @@ const router = createBrowserRouter(
           path="/profile"
           element={<PrivateRoute element={<Profile />} />}
         ></Route>
-        <Route
+        {/* <Route
           path="/contact"
           element={<PrivateRoute element={<Contact />} />}
-        ></Route>
+        ></Route> */}
         <Route
           path="/create-product"
           element={<PrivateRoute element={<CreateProduct />} />}
@@ -84,15 +84,15 @@ const router = createBrowserRouter(
           path="/edit-product/:productId"
           element={<PrivateRoute element={<CreateProduct edit />} />}
         ></Route>
-        <Route
+        {/* <Route
           path="/journal"
           element={<PrivateRoute element={<Journal />} />}
-        ></Route>
+        ></Route> */}
         {/* ==================== Header Navlink End here ===================== */}
-        <Route
+        {/* <Route
           path="/offer"
           element={<PrivateRoute element={<Offer />} />}
-        ></Route>
+        ></Route> */}
         <Route
           path="/product/:_id"
           element={<PrivateRoute element={<ProductDetails />} />}

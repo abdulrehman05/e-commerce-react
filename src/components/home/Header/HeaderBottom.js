@@ -32,11 +32,15 @@ const HeaderBottom = () => {
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
-
+  const { products } = useSelector((state) => state.product);
   useEffect(() => {
-    const filtered = paginationItems.filter((item) =>
-      item.productName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filtered =
+      (products &&
+        products.length > 0 &&
+        products.filter((item) =>
+          item?.product?.title.toLowerCase().includes(searchQuery.toLowerCase())
+        )) ||
+      [];
     setFilteredProducts(filtered);
   }, [searchQuery]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -117,32 +121,39 @@ const HeaderBottom = () => {
                     <div
                       onClick={() =>
                         navigate(
-                          `/product/${item.productName
+                          `/product/${item?.product?._id
                             .toLowerCase()
                             .split(" ")
                             .join("")}`,
                           {
                             state: {
-                              item: item,
+                              item: item?.product,
                             },
                           }
                         ) &
                         setShowSearchBar(true) &
                         setSearchQuery("")
                       }
-                      key={item._id}
+                      key={item?.product?._id}
                       className="max-w-[600px] h-28 bg-gray-100 mb-3 flex items-center gap-3"
                     >
-                      <img className="w-24" src={item.img} alt="productImg" />
+                      <img
+                        className="w-24"
+                        src={
+                          process.env.REACT_APP_BACKEND_IMAGE_LINK +
+                          item?.product?.ImageFileName
+                        }
+                        alt="productImg"
+                      />
                       <div className="flex flex-col gap-1">
                         <p className="font-semibold text-lg">
-                          {item.productName}
+                          {item?.product?.title}
                         </p>
-                        <p className="text-xs">{item.des}</p>
+                        <p className="text-xs">{item.description}</p>
                         <p className="text-sm">
                           Price:{" "}
                           <span className="text-primeColor font-semibold">
-                            ${item.price}
+                            ${item?.product?.price}
                           </span>
                         </p>
                       </div>

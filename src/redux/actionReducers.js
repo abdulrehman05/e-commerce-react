@@ -187,6 +187,42 @@ export const signupUser = (userDetails) => async (dispatch) => {
     );
   }
 };
+export const contactUsAction =
+  (contactDetails) => async (dispatch, getState) => {
+    try {
+      // dispatch({ type: SIGNUP_USER_REQUEST });
+      const headers = {
+        Authorization: getState().user.userInfo.token,
+      };
+      const { data } = await axios.post(
+        process.env.REACT_APP_BACKEND + "/api/contact-us",
+        contactDetails,
+        { headers }
+      );
+      // localStorage.setItem(
+      //   "userInfo",
+      //   JSON.stringify({ ...getState().user.userInfo, ...data?.data })
+      // );
+      // await dispatch({
+      //   type: LOGIN_USER_SUCCESS,
+      //   payload: { ...getState().user.userInfo, ...data?.data },
+      // });
+      // dispatch({ type: SIGNUP_USER_SUCCESS, payload: data });
+    } catch (error) {
+      // dispatch({
+      //   type: SIGNUP_USER_FAIL,
+      //   payload:
+      //     error.response && error.response.data.message
+      //       ? error.response.data.message
+      //       : error.message,
+      // });
+      throw new Error(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  };
 export const updateUser = (userDetails) => async (dispatch, getState) => {
   try {
     // dispatch({ type: SIGNUP_USER_REQUEST });

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
+import { useDispatch } from "react-redux";
+import { contactUsAction } from "../../redux/actionReducers";
 
 const Contact = () => {
   const location = useLocation();
@@ -40,26 +42,35 @@ const Contact = () => {
       .match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
   };
   // ================= Email Validation End here ===============
-
-  const handlePost = (e) => {
-    e.preventDefault();
-    if (!clientName) {
-      setErrClientName("Enter your Name");
-    }
-    if (!email) {
-      setErrEmail("Enter your Email");
-    } else {
-      if (!EmailValidation(email)) {
-        setErrEmail("Enter a Valid Email");
+  const dispatch = useDispatch();
+  const handlePost = async (e) => {
+    try {
+      e.preventDefault();
+      if (!clientName) {
+        setErrClientName("Enter your Name");
       }
-    }
-    if (!messages) {
-      setErrMessages("Enter your Messages");
-    }
-    if (clientName && email && EmailValidation(email) && messages) {
-      setSuccessMsg(
-        `Thank you dear ${clientName}, Your messages has been received successfully. Futher details will sent to you by your email at ${email}.`
+      if (!email) {
+        setErrEmail("Enter your Email");
+      } else {
+        if (!EmailValidation(email)) {
+          setErrEmail("Enter a Valid Email");
+        }
+      }
+      if (!messages) {
+        setErrMessages("Enter your Messages");
+      }
+      if (clientName && email && EmailValidation(email) && messages) {
+        setSuccessMsg(
+          `Thank you dear ${clientName}, Your messages has been received successfully. Futher details will sent to you by your email at ${email}.`
+        );
+      }
+      dispatch(
+        contactUsAction({ name: clientName, email: email, message: messages })
       );
+    } catch (error) {
+      // if (!messages) {
+      setErrMessages(error.message);
+      // }
     }
   };
 
@@ -101,7 +112,7 @@ const Contact = () => {
                 value={email}
                 className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
                 type="email"
-                placeholder="Enter your name here"
+                placeholder="Enter your email here"
               />
               {errEmail && (
                 <p className="text-red-500 text-sm font-titleFont font-semibold mt-1 px-2 flex items-center gap-1">
@@ -121,7 +132,7 @@ const Contact = () => {
                 rows="3"
                 className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor resize-none"
                 type="text"
-                placeholder="Enter your name here"
+                placeholder="Enter your messages here"
               ></textarea>
               {errMessages && (
                 <p className="text-red-500 text-sm font-titleFont font-semibold mt-1 px-2 flex items-center gap-1">
