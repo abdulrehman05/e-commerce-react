@@ -27,6 +27,8 @@ import Shop from "./pages/Shop/Shop";
 import CreateProduct from "./pages/ProductAdd/ProductAdd";
 import { useEffect } from "react";
 import Profile from "./pages/Profile/Profile";
+import ForgotPassword from "./pages/Account/ForgotPassword";
+import ResetPassword from "./pages/Account/ResetPassword";
 
 const Layout = () => {
   return (
@@ -79,6 +81,10 @@ const router = createBrowserRouter(
           element={<PrivateRoute element={<CreateProduct />} />}
         ></Route>
         <Route
+          path="/edit-product/:productId"
+          element={<PrivateRoute element={<CreateProduct edit />} />}
+        ></Route>
+        <Route
           path="/journal"
           element={<PrivateRoute element={<Journal />} />}
         ></Route>
@@ -95,13 +101,15 @@ const router = createBrowserRouter(
           path="/cart"
           element={<PrivateRoute element={<Cart />} />}
         ></Route>
-        <Route
+        {/* <Route
           path="/paymentgateway"
           element={<PrivateRoute element={<Payment />} />}
-        ></Route>
+        ></Route> */}
       </Route>
       <Route path="/signup" element={<SignUp />}></Route>
       <Route path="/signin" element={<SignIn />}></Route>
+      <Route path="/forget-password" element={<ForgotPassword />}></Route>
+      <Route path="/reset-password/:token" element={<ResetPassword />}></Route>
     </Route>
   )
 );

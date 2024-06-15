@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { HiOutlineMenuAlt4 } from "react-icons/hi";
 import { FaSearch, FaUser, FaCaretDown, FaShoppingCart } from "react-icons/fa";
 import Flex from "../../designLayouts/Flex";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { paginationItems } from "../../../constants";
 import { LOGOUT, logout } from "../../../redux/store";
@@ -39,7 +39,28 @@ const HeaderBottom = () => {
     );
     setFilteredProducts(filtered);
   }, [searchQuery]);
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
+  const handleCategoryClick = (title) => {
+    const currentCategories = searchParams.get("categories")
+      ? searchParams.get("categories").split(",")
+      : [];
+    const categoryIndex = currentCategories.indexOf(title);
+    if (categoryIndex >= 0) {
+      // Category already selected, remove it
+      currentCategories.splice(categoryIndex, 1);
+    } else {
+      // Category not selected, add it
+      currentCategories.push(title);
+    }
+    if (currentCategories.length > 0) {
+      searchParams.set("categories", currentCategories.join(","));
+    } else {
+      searchParams.delete("categories");
+    }
+    setSearchParams(searchParams);
+    navigate(`/shop?${searchParams.toString()}`);
+  };
   return (
     <div className="w-full bg-[#F5F5F3] relative">
       <div className="max-w-container mx-auto">
@@ -59,23 +80,21 @@ const HeaderBottom = () => {
                 transition={{ duration: 0.5 }}
                 className="absolute top-36 z-50 bg-primeColor w-auto text-[#767676] h-auto p-4 pb-6"
               >
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Accessories
+                <li
+                  onClick={() => {
+                    handleCategoryClick("Art");
+                  }}
+                  className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer"
+                >
+                  Art
                 </li>
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Furniture
-                </li>
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Electronics
-                </li>
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Clothes
-                </li>
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400  hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Bags
-                </li>
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400  hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Home appliances
+                <li
+                  onClick={() => {
+                    handleCategoryClick("Handicraft");
+                  }}
+                  className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer"
+                >
+                  Handicraft
                 </li>
               </motion.ul>
             )}

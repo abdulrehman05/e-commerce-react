@@ -2,60 +2,44 @@ import React, { useEffect, useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import { logoLight } from "../../assets/images";
-import { loginUser } from "../../redux/actionReducers";
 import { useDispatch, useSelector } from "react-redux";
+import { forgotPassword } from "../../redux/actionReducers";
 
-const SignIn = () => {
-  // ============= Initial State Start here =============
+const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  // ============= Initial State End here ===============
-  // ============= Error Msg Start here =================
   const [errEmail, setErrEmail] = useState("");
-  const [errPassword, setErrPassword] = useState("");
-
-  // ============= Error Msg End here ===================
   const [successMsg, setSuccessMsg] = useState("");
-  // ============= Event Handler Start here =============
+  const dispatch = useDispatch();
+  const router = useNavigate();
+
   const handleEmail = (e) => {
     setEmail(e.target.value);
     setErrEmail("");
+    setSuccessMsg("");
   };
-  const handlePassword = (e) => {
-    setPassword(e.target.value);
-    setErrPassword("");
-  };
-  // ============= Event Handler End here ===============
-  const router = useNavigate();
-  const userInfo = useSelector((state) => state.user.userInfo);
-  const state = useSelector((state) => state);
-  const dispatch = useDispatch();
-  const handleSignIn = async (e) => {
+
+  const handleForgotPassword = async (e) => {
     try {
       e.preventDefault();
 
       if (!email) {
         setErrEmail("Enter your email");
+        return;
       }
 
-      if (!password) {
-        setErrPassword("Create a password");
-      }
-      // ============== Getting the value ==============
-      if (email && password) {
-        // setSuccessMsg(
-        //   `Hello dear, Thank you for your attempt. We are processing to validate your access. Till then stay connected and additional assistance will be sent to you by your mail at ${email}`
-        // );
-        await dispatch(loginUser({ email, password }));
-        router("/");
-        setEmail("");
-        setPassword("");
-      }
+      dispatch(forgotPassword({ email }));
+
+      // Here you would typically send a password reset email
+      // For the sake of this example, we'll just set a success message
+      setSuccessMsg(
+        `An email has been sent to ${email} with instructions to reset your password.`
+      );
+      setEmail("");
     } catch (err) {
-      setErrPassword(err.message);
+      // Handle error, if any
     }
   };
-
+  const userInfo = useSelector((state) => state?.user?.userInfo);
   useEffect(() => {
     if (userInfo && userInfo.email && userInfo.token) {
       router("/");
@@ -135,12 +119,12 @@ const SignIn = () => {
             <p className="w-full px-4 py-10 text-green-500 font-medium font-titleFont">
               {successMsg}
             </p>
-            <Link to="/signup">
+            <Link to="/signin">
               <button
                 className="w-full h-10 bg-primeColor rounded-md text-gray-200 text-base font-titleFont font-semibold 
             tracking-wide hover:bg-black hover:text-white duration-300"
               >
-                Sign Up
+                Sign In
               </button>
             </Link>
           </div>
@@ -148,13 +132,13 @@ const SignIn = () => {
           <form className="w-full lgl:w-[450px] h-screen flex items-center justify-center">
             <div className="px-6 py-4 w-full h-[90%] flex flex-col justify-center overflow-y-scroll scrollbar-thin scrollbar-thumb-primeColor">
               <h1 className="font-titleFont underline underline-offset-4 decoration-[1px] font-semibold text-3xl mdl:text-4xl mb-4">
-                Sign in
+                Forgot Password
               </h1>
               <div className="flex flex-col gap-3">
                 {/* Email */}
                 <div className="flex flex-col gap-.5">
                   <p className="font-titleFont text-base font-semibold text-gray-600">
-                    Work Email
+                    Enter your email
                   </p>
                   <input
                     onChange={handleEmail}
@@ -171,44 +155,17 @@ const SignIn = () => {
                   )}
                 </div>
 
-                {/* Password */}
-                <div className="flex flex-col gap-.5">
-                  <p className="font-titleFont text-base font-semibold text-gray-600">
-                    Password
-                  </p>
-                  <input
-                    onChange={handlePassword}
-                    value={password}
-                    className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
-                    type="password"
-                    placeholder="Create password"
-                  />
-                  {errPassword && (
-                    <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
-                      <span className="font-bold italic mr-1">!</span>
-                      {errPassword}
-                    </p>
-                  )}
-                </div>
-
                 <button
-                  onClick={handleSignIn}
+                  onClick={handleForgotPassword}
                   className="bg-primeColor hover:bg-black text-gray-200 hover:text-white cursor-pointer w-full text-base font-medium h-10 rounded-md  duration-300"
                 >
-                  Sign In
+                  Submit
                 </button>
                 <p className="text-sm text-center font-titleFont font-medium">
-                  <Link to="/forget-password">
+                  Remember your password?{" "}
+                  <Link to="/signin">
                     <span className="hover:text-blue-600 duration-300">
-                      Forgot Password?{" "}
-                    </span>
-                  </Link>
-                </p>
-                <p className="text-sm text-center font-titleFont font-medium">
-                  Don't have an Account?{" "}
-                  <Link to="/signup">
-                    <span className="font-semibold text-red-500 hover:text-blue-600 hover:underline underline-offset-2 decoration-[1px] cursor-pointer duration-300">
-                      Sign up
+                      Sign in
                     </span>
                   </Link>
                 </p>
@@ -221,4 +178,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default ForgotPassword;

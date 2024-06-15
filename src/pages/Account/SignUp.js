@@ -47,7 +47,7 @@ const SignUp = () => {
     const file = e.target.files[0];
     setFormData((prevState) => ({
       ...prevState,
-      profileImage: file,
+      imageUpload: file,
     }));
   };
   // ================= Email Validation End here ===============
@@ -75,18 +75,18 @@ const SignUp = () => {
         } else if (formData.password.length < 8) {
           newErrors.password = "Passwords must be at least 8 characters";
         }
-        if (!formData.address) {
-          newErrors.address = "Enter your address";
-        }
-        if (!formData.city) {
-          newErrors.city = "Enter your city name";
-        }
-        if (!formData.country) {
-          newErrors.country = "Enter the country you are residing";
-        }
-        if (!formData.zip) {
-          newErrors.zip = "Enter the zip code of your area";
-        }
+        // if (!formData.address) {
+        //   newErrors.address = "Enter your address";
+        // }
+        // if (!formData.city) {
+        //   newErrors.city = "Enter your city name";
+        // }
+        // if (!formData.country) {
+        //   newErrors.country = "Enter the country you are residing";
+        // }
+        // if (!formData.zip) {
+        //   newErrors.zip = "Enter the zip code of your area";
+        // }
 
         if (Object.keys(newErrors).length > 0) {
           setErrors(newErrors);
@@ -259,16 +259,16 @@ const SignUp = () => {
                     Profile Picture
                   </p>
                   <input
-                    name="profileImage"
+                    name="imageUpload"
                     onChange={handleImageChange}
                     accept="image/*"
                     className="w-full h-8 text-base font-medium rounded-md border-gray-400 outline-none"
                     type="file"
                   />
-                  {errors.profileImage && (
+                  {errors.imageUpload && (
                     <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
                       <span className="font-bold italic mr-1">!</span>
-                      {errors.profileImage}
+                      {errors.imageUpload}
                     </p>
                   )}
                 </div>

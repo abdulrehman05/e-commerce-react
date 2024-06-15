@@ -7,7 +7,11 @@ import { logo, logoLight } from "../../../assets/images";
 import Image from "../../designLayouts/Image";
 import { navBarList } from "../../../constants";
 import Flex from "../../designLayouts/Flex";
-import { fetchProducts, getCart } from "../../../redux/actionReducers";
+import {
+  fetchProducts,
+  getCart,
+  getMyProducts,
+} from "../../../redux/actionReducers";
 import { useDispatch } from "react-redux";
 
 const Header = () => {
@@ -33,6 +37,7 @@ const Header = () => {
     try {
       dispatch(fetchProducts());
       dispatch(getCart());
+      dispatch(getMyProducts());
     } catch (error) {}
   }, []);
   return (

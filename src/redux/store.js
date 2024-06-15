@@ -7,6 +7,7 @@ import {
   cartReducer,
   checkoutReducer,
   signupReducer,
+  myProductReducer,
 } from "./actionReducers";
 import orebiSlice from "./orebiSlice";
 
@@ -27,6 +28,7 @@ const appReducer = combineReducers({
   createProduct: createProductReducer,
   cart: cartReducer,
   checkout: checkoutReducer,
+  myProducts: myProductReducer,
 });
 
 const rootReducer = (state, action) => {

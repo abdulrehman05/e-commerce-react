@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import { Link } from "react-router-dom";
-import { updateUser } from "../../redux/actionReducers";
+import { getMyProducts, updateUser } from "../../redux/actionReducers";
+import Product from "../../components/home/Products/Product";
 
 const Profile = () => {
   const userInfo = useSelector((state) => state.user.userInfo);
+  const myProducts = useSelector((state) => state.myProducts);
   const [isEditing, setIsEditing] = useState(false);
   const [editInfo, setEditInfo] = useState({
     firstName: userInfo.name.firstName,
@@ -67,9 +69,15 @@ const Profile = () => {
     const file = e.target.files[0];
     setEditInfo((prevState) => ({
       ...prevState,
-      profileImage: file,
+      imageUpload: file,
     }));
   };
+  useEffect(() => {
+    try {
+      dispatch(getMyProducts());
+    } catch (error) {}
+  }, []);
+  console.log({ myProducts });
   return (
     <div className="max-w-container mx-auto px-4">
       <Breadcrumbs title="Profile" />
@@ -84,7 +92,7 @@ const Profile = () => {
             <strong>Profile Picture:</strong>{" "}
             {isEditing ? (
               <input
-                name="profileImage"
+                name="imageUpload"
                 onChange={handleImageChange}
                 accept="image/*"
                 className="w-full h-8 text-base font-medium rounded-md border-gray-400 outline-none"
@@ -93,8 +101,10 @@ const Profile = () => {
             ) : (
               <img
                 src={
-                  process.env.REACT_APP_BACKEND_IMAGE_LINK +
-                  userInfo.profileImageName
+                  userInfo.imageUploadName === "dummy"
+                    ? "/empty-profile.png"
+                    : process.env.REACT_APP_BACKEND_IMAGE_LINK +
+                      userInfo.imageUploadName
                 }
                 height={120}
                 style={{
@@ -117,7 +127,7 @@ const Profile = () => {
                 className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
               />
             ) : (
-              userInfo.name.firstName
+              userInfo.name.firstName || "-"
             )}
           </p>
           <p>
@@ -131,7 +141,7 @@ const Profile = () => {
                 className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
               />
             ) : (
-              userInfo.name.lastName
+              userInfo.name.lastName || "-"
             )}
           </p>
           <p>
@@ -148,10 +158,10 @@ const Profile = () => {
             {userInfo.email}
             {/* // )} */}
           </p>
-          <p>
-            <strong>Email Verified:</strong>{" "}
+          {/* <p>
+            <strong>Account Verified:</strong>{" "}
             {userInfo.emailVerification ? "Yes" : "No"}
-          </p>
+          </p> */}
           <p>
             <strong>Phone Number:</strong>{" "}
             {isEditing ? (
@@ -163,7 +173,7 @@ const Profile = () => {
                 className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
               />
             ) : (
-              userInfo.phoneNo
+              userInfo.phoneNo || "-"
             )}
           </p>
           <p>
@@ -177,7 +187,7 @@ const Profile = () => {
                 className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
               />
             ) : (
-              userInfo.address
+              userInfo.address || "-"
             )}
           </p>
           <p>
@@ -191,7 +201,7 @@ const Profile = () => {
                 className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
               />
             ) : (
-              userInfo.city
+              userInfo.city || "-"
             )}
           </p>
           <p>
@@ -205,7 +215,7 @@ const Profile = () => {
                 className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
               />
             ) : (
-              userInfo.country
+              userInfo.country || "-"
             )}
           </p>
           <p>
@@ -219,7 +229,7 @@ const Profile = () => {
                 className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
               />
             ) : (
-              userInfo.zipCode
+              userInfo.zipCode || "-"
             )}
           </p>
         </div>
@@ -254,6 +264,21 @@ const Profile = () => {
             Continue Shopping
           </button>
         </Link> */}
+      </div>
+      <div className="pb-10">
+        <h1 className="max-w-[600px] text-base text-lightText mb-2">
+          <span className="text-primeColor font-semibold text-lg">
+            My Products
+          </span>
+        </h1>
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lgl:grid-cols-3 xl:grid-cols-4 gap-10">
+          {myProducts?.products &&
+            myProducts?.products.length > 0 &&
+            myProducts?.products.map((e) => {
+              console.log({ product: e });
+              return <Product product={e?.product} edit />;
+            })}
+        </div>
       </div>
     </div>
   );

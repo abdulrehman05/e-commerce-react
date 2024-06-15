@@ -5,6 +5,10 @@ import { combineReducers } from "redux";
 export const GET_PRODUCTS_REQUEST = "GET_PRODUCTS_REQUEST";
 export const GET_PRODUCTS_SUCCESS = "GET_PRODUCTS_SUCCESS";
 export const GET_PRODUCTS_FAIL = "GET_PRODUCTS_FAIL";
+// Action Types
+export const GET_MY_PRODUCTS_REQUEST = "GET_MY_PRODUCTS_REQUEST";
+export const GET_MY_PRODUCTS_SUCCESS = "GET_MY_PRODUCTS_SUCCESS";
+export const GET_MY_PRODUCTS_FAIL = "GET_MY_PRODUCTS_FAIL";
 
 export const LOGIN_USER_REQUEST = "LOGIN_USER_REQUEST";
 export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
@@ -60,10 +64,42 @@ export const fetchProducts = () => async (dispatch, getState) => {
           ? error.response.data.message
           : error.message,
     });
-    throw error;
+    throw new Error(
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    );
   }
 };
 
+export const getMyProducts = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: GET_MY_PRODUCTS_REQUEST });
+    const headers = {
+      Authorization: getState().user.userInfo.token,
+    };
+    const { data } = await axios.get(
+      process.env.REACT_APP_BACKEND + "/api/products/user-products",
+      {
+        headers: headers,
+      }
+    );
+    dispatch({ type: GET_MY_PRODUCTS_SUCCESS, payload: data?.data });
+  } catch (error) {
+    dispatch({
+      type: GET_MY_PRODUCTS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+    throw new Error(
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    );
+  }
+};
 export const loginUser = (credentials) => async (dispatch) => {
   try {
     dispatch({ type: LOGIN_USER_REQUEST });
@@ -86,6 +122,48 @@ export const loginUser = (credentials) => async (dispatch) => {
   }
 };
 
+export const forgotPassword = (credentials) => async (dispatch) => {
+  try {
+    dispatch({ type: LOGIN_USER_REQUEST });
+    const { data } = await axios.post(
+      process.env.REACT_APP_BACKEND + "/api/auth/request-password-reset",
+      credentials
+    );
+
+    // localStorage.setItem("userInfo", JSON.stringify(data?.data?.payload));
+    await dispatch({ type: LOGIN_USER_SUCCESS, payload: data?.data?.payload });
+  } catch (error) {
+    dispatch({
+      type: LOGIN_USER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+    throw new Error(error.response.data.message);
+  }
+};
+export const resetPassword = (formdata, token) => async (dispatch) => {
+  try {
+    dispatch({ type: LOGIN_USER_REQUEST });
+    const { data } = await axios.post(
+      process.env.REACT_APP_BACKEND + "/api/auth/reset-password/" + token,
+      formdata
+    );
+
+    // localStorage.setItem("userInfo", JSON.stringify(data?.data?.payload));
+    await dispatch({ type: LOGIN_USER_SUCCESS, payload: data?.data?.payload });
+  } catch (error) {
+    dispatch({
+      type: LOGIN_USER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+    throw new Error(error.response.data.message);
+  }
+};
 export const signupUser = (userDetails) => async (dispatch) => {
   try {
     dispatch({ type: SIGNUP_USER_REQUEST });
@@ -102,7 +180,11 @@ export const signupUser = (userDetails) => async (dispatch) => {
           ? error.response.data.message
           : error.message,
     });
-    throw error;
+    throw new Error(
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    );
   }
 };
 export const updateUser = (userDetails) => async (dispatch, getState) => {
@@ -133,7 +215,96 @@ export const updateUser = (userDetails) => async (dispatch, getState) => {
     //       ? error.response.data.message
     //       : error.message,
     // });
-    throw error;
+    throw new Error(
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    );
+  }
+};
+
+export const deleteProduct = (productId) => async (dispatch, getState) => {
+  try {
+    const headers = {
+      Authorization: getState().user.userInfo.token,
+    };
+    // dispatch({ type: CREATE_PRODUCT_REQUEST });
+    const { data } = await axios.delete(
+      process.env.REACT_APP_BACKEND + `/api/products/${productId}/delete`,
+      { headers }
+    );
+    // dispatch({ type: CREATE_PRODUCT_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: CREATE_PRODUCT_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+    throw new Error(
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    );
+  }
+};
+export const updateProduct =
+  (formData, productId) => async (dispatch, getState) => {
+    try {
+      const headers = {
+        Authorization: getState().user.userInfo.token,
+      };
+      // dispatch({ type: CREATE_PRODUCT_REQUEST });
+      const { data } = await axios.put(
+        process.env.REACT_APP_BACKEND + `/api/products/${productId}/update`,
+        formData,
+        { headers }
+      );
+      // dispatch({ type: CREATE_PRODUCT_SUCCESS, payload: data });
+    } catch (error) {
+      console.log({ error });
+      dispatch({
+        type: CREATE_PRODUCT_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+      throw new Error(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  };
+
+export const checkoutCart = () => async (dispatch, getState) => {
+  try {
+    const headers = {
+      Authorization: getState().user.userInfo.token,
+    };
+    // dispatch({ type: CREATE_PRODUCT_REQUEST });
+    const { data } = await axios.post(
+      process.env.REACT_APP_BACKEND + `/api/cart/place-order`,
+      {},
+      { headers }
+    );
+    // dispatch({ type: CREATE_PRODUCT_SUCCESS, payload: data });
+  } catch (error) {
+    console.log({ error });
+    // dispatch({
+    //   type: CREATE_PRODUCT_FAIL,
+    //   payload:
+    //     error.response && error.response.data.message
+    //       ? error.response.data.message
+    //       : error.message,
+    // });
+    throw new Error(
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    );
   }
 };
 
@@ -157,7 +328,11 @@ export const createProduct = (productDetails) => async (dispatch, getState) => {
           ? error.response.data.message
           : error.message,
     });
-    throw error;
+    throw new Error(
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    );
   }
 };
 
@@ -180,7 +355,11 @@ export const getCart = () => async (dispatch, getState) => {
           ? error.response.data.message
           : error.message,
     });
-    throw error;
+    throw new Error(
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    );
   }
 };
 
@@ -205,9 +384,43 @@ export const addToCart =
             ? error.response.data.message
             : error.message,
       });
-      throw error;
+      throw new Error(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
     }
   };
+
+export const reviewProduct =
+  (review, productId) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: ADD_TO_CART_REQUEST });
+      const headers = {
+        Authorization: getState().user.userInfo.token,
+      };
+      await axios.put(
+        `${process.env.REACT_APP_BACKEND}/api/products/${productId}/add-rating`,
+        { stars: review },
+        { headers }
+      );
+      dispatch({ type: ADD_TO_CART_SUCCESS });
+    } catch (error) {
+      dispatch({
+        type: ADD_TO_CART_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+      throw new Error(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    }
+  };
+
 export const decreaseFromCart =
   (productId, quantity) => async (dispatch, getState) => {
     try {
@@ -229,7 +442,11 @@ export const decreaseFromCart =
             ? error.response.data.message
             : error.message,
       });
-      throw error;
+      throw new Error(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
     }
   };
 export const emptyAllFromCart = () => async (dispatch, getState) => {
@@ -252,7 +469,11 @@ export const emptyAllFromCart = () => async (dispatch, getState) => {
           ? error.response.data.message
           : error.message,
     });
-    throw error;
+    throw new Error(
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    );
   }
 };
 
@@ -277,7 +498,11 @@ export const decreaseQuantity = (productId) => async (dispatch, getState) => {
           ? error.response.data.message
           : error.message,
     });
-    throw error;
+    throw new Error(
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    );
   }
 };
 
@@ -302,7 +527,11 @@ export const removeFromCart = (productId) => async (dispatch, getState) => {
           ? error.response.data.message
           : error.message,
     });
-    throw error;
+    throw new Error(
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    );
   }
 };
 
@@ -322,7 +551,11 @@ export const checkout = (orderDetails) => async (dispatch) => {
           ? error.response.data.message
           : error.message,
     });
-    throw error;
+    throw new Error(
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    );
   }
 };
 
@@ -341,6 +574,19 @@ export const productReducer = (state = initialProductState, action) => {
     case GET_PRODUCTS_SUCCESS:
       return { ...state, loading: false, products: action.payload };
     case GET_PRODUCTS_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const myProductReducer = (state = initialProductState, action) => {
+  switch (action.type) {
+    case GET_MY_PRODUCTS_REQUEST:
+      return { ...state, loading: true, error: null };
+    case GET_MY_PRODUCTS_SUCCESS:
+      return { ...state, loading: false, products: action.payload };
+    case GET_MY_PRODUCTS_FAIL:
       return { ...state, loading: false, error: action.payload };
     default:
       return state;
