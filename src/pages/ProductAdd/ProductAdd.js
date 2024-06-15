@@ -18,7 +18,6 @@ const CreateProduct = ({ edit }) => {
       products.length > 0 &&
       products.find((p) => p?.product?._id === productId)
     : {};
-  console.log({ productId, products, currentProduct });
 
   useEffect(() => {
     if (currentProduct && edit) {
@@ -75,7 +74,6 @@ const CreateProduct = ({ edit }) => {
     try {
       e.preventDefault();
       const newErrors = validateForm();
-      console.log({ edit, edit, newErrors });
       if (Object.keys(newErrors).length > 0) {
         setErrors(newErrors);
       } else {
@@ -103,7 +101,6 @@ const CreateProduct = ({ edit }) => {
         await dispatch(fetchProducts());
       }
     } catch (error) {
-      console.log({ error });
       setErrors({ description: error.message });
     }
   };

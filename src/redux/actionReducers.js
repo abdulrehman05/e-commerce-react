@@ -263,7 +263,6 @@ export const updateProduct =
       );
       // dispatch({ type: CREATE_PRODUCT_SUCCESS, payload: data });
     } catch (error) {
-      console.log({ error });
       dispatch({
         type: CREATE_PRODUCT_FAIL,
         payload:
@@ -292,7 +291,6 @@ export const checkoutCart = () => async (dispatch, getState) => {
     );
     // dispatch({ type: CREATE_PRODUCT_SUCCESS, payload: data });
   } catch (error) {
-    console.log({ error });
     // dispatch({
     //   type: CREATE_PRODUCT_FAIL,
     //   payload:

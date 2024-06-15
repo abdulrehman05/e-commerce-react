@@ -77,7 +77,6 @@ const Profile = () => {
       dispatch(getMyProducts());
     } catch (error) {}
   }, []);
-  console.log({ myProducts });
   return (
     <div className="max-w-container mx-auto px-4">
       <Breadcrumbs title="Profile" />
@@ -275,7 +274,6 @@ const Profile = () => {
           {myProducts?.products &&
             myProducts?.products.length > 0 &&
             myProducts?.products.map((e) => {
-              console.log({ product: e });
               return <Product product={e?.product} edit />;
             })}
         </div>
