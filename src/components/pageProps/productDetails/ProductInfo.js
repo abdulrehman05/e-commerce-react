@@ -10,12 +10,17 @@ import { FaStar } from "react-icons/fa";
 
 const ProductInfo = ({ productInfo }) => {
   const dispatch = useDispatch();
-
+  const [loading, setLoading] = useState(false);
   const addProductToCart = async () => {
     try {
+      setLoading(true);
       await dispatch(addToCart(productInfo?._id, 1));
       await dispatch(getCart());
-    } catch (error) {}
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
   const [hoverReview, setHoverReview] = useState(undefined);
 
@@ -52,6 +57,7 @@ const ProductInfo = ({ productInfo }) => {
         <button
           onClick={() => addProductToCart()}
           className="w-full py-4 bg-primeColor hover:bg-black duration-300 text-white text-lg font-titleFont"
+          style={loading ? { background: "gray" } : {}}
         >
           Add to Cart
         </button>

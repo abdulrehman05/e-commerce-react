@@ -14,7 +14,7 @@ const ProductsOnSale = () => {
       <div className="flex flex-col gap-2">
         {products &&
           products.length > 0 &&
-          [...products, ...products, ...products, ...products, ...products]
+          [...products]
             .filter((e) => e?.product?._id !== productId)
             .sort(() => Math.random() - 0.5)
             .slice(0, 4)

@@ -45,17 +45,24 @@ const Cart = () => {
     } catch (error) {}
   };
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [checkedOut, setCheckedOut] = useState(false);
   const checkout = async () => {
-    try {
-      setError("");
-      await dispatch(checkoutCart());
-      await dispatch(getCart());
-      dispatch(fetchProducts());
-      dispatch(getMyProducts());
-      setCheckedOut(true);
-    } catch (error) {
-      setError(error.message);
+    if (!loading) {
+      try {
+        setError("");
+        setLoading(true);
+        await dispatch(checkoutCart());
+        await dispatch(getCart());
+        dispatch(fetchProducts());
+        dispatch(getMyProducts());
+        setCheckedOut(true);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+
+        setError(error.message);
+      }
     }
   };
   return (
@@ -165,6 +172,7 @@ const Cart = () => {
                     <button
                       className="w-52 h-10 bg-primeColor text-white hover:bg-black duration-300"
                       onClick={checkout}
+                      style={loading ? { background: "gray" } : {}}
                     >
                       Checkout
                     </button>
