@@ -4,6 +4,7 @@ import { FaFacebook, FaYoutube, FaLinkedin, FaGithub } from "react-icons/fa";
 import FooterListTitle from "./FooterListTitle";
 import { paymentCard } from "../../../assets/images";
 import Image from "../../designLayouts/Image";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const [emailInfo, setEmailInfo] = useState("");
@@ -34,10 +35,11 @@ const Footer = () => {
           <FooterListTitle title=" More about Market Wizards" />
           <div className="flex flex-col gap-6">
             <p className="text-base w-full xl:w-[80%]">
-              Online Art And Craft Designing in just one Click. Trusted from
-              Millions of Customers.
+              Market Wizard is one of the world's leading ecommerce brands and
+              is internationally recognized for celebrating the essence of
+              classic Worldwide cool looking style.
             </p>
-            <ul className="flex items-center gap-2">
+            {/* <ul className="flex items-center gap-2">
               <a
                 href="https://wasimteach.blogspot.com"
                 target="_blank"
@@ -74,31 +76,12 @@ const Footer = () => {
                   <FaLinkedin />
                 </li>
               </a>
-            </ul>
+            </ul> */}
           </div>
         </div>
+        <div></div>
         <div>
-          <FooterListTitle title="Shop" />
-          <ul className="flex flex-col gap-2">
-            <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              Accesories
-            </li>
-            <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              Clothes
-            </li>
-            <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              Electronics
-            </li>
-            <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              Home appliances
-            </li>
-            <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              New Arrivals
-            </li>
-          </ul>
-        </div>
-        <div>
-          <FooterListTitle title="Your account" />
+          {/* <FooterListTitle title="Your account" />
           <ul className="flex flex-col gap-2">
             <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
               Profile
@@ -115,10 +98,31 @@ const Footer = () => {
             <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
               Payment Options
             </li>
-          </ul>
+          </ul> */}
         </div>
         <div className="col-span-2 flex flex-col items-center w-full px-4">
-          <FooterListTitle title="Subscribe to our newsletter." />
+          <FooterListTitle title="Links" />
+          <ul className="flex flex-col gap-2">
+            <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
+              <Link to="/">Home</Link>
+            </li>{" "}
+            <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
+              <Link to="/profile">Profile</Link>
+            </li>
+            <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
+              <Link to="/shop">Shop</Link>
+            </li>
+            <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
+              <Link to="/about">Contact</Link>
+            </li>
+            {/* <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
+              Home appliances
+            </li>
+            <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
+              New Arrivals
+            </li> */}
+          </ul>
+          {/* <FooterListTitle title="Subscribe to our newsletter." />
           <div className="w-full">
             <p className="text-center mb-4">
               A Trusted Platform For Your Shopping.
@@ -163,7 +167,7 @@ const Footer = () => {
               }`}
               imgSrc={paymentCard}
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -1,9 +1,11 @@
 import React from "react";
 import { SplOfferData } from "../../../constants";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const ProductsOnSale = () => {
   const { products } = useSelector((state) => state.product);
+  const { productId } = useParams();
   return (
     <div>
       <h3 className="font-titleFont text-xl font-semibold mb-6 underline underline-offset-4 decoration-[1px]">
@@ -12,16 +14,22 @@ const ProductsOnSale = () => {
       <div className="flex flex-col gap-2">
         {products &&
           products.length > 0 &&
-          products
+          [...products, ...products, ...products, ...products, ...products]
+            .filter((e) => e?.product?._id !== productId)
             .sort(() => Math.random() - 0.5)
-            .map((item) => (
+            .slice(0, 4)
+            .map((item, index) => (
               <div
-                key={item?.product?._id}
+                key={item?.product?._id + index}
                 className="flex items-center gap-4 border-b-[1px] border-b-gray-300 py-2"
               >
                 <div>
                   <img
-                    className="w-24"
+                    style={{
+                      width: "100px",
+                      aspectRatio: "1 / 1",
+                      objectFit: "cover",
+                    }}
                     src={
                       process.env.REACT_APP_BACKEND_IMAGE_LINK +
                       item?.product?.ImageFileName

@@ -9,12 +9,7 @@ const FooterBottom = () => {
           <span className="text-md mr-[1px] mt-[2px] md:mt-0 text-center hidden md:inline-flex">
             <AiOutlineCopyright />
           </span>
-          Copyright 2024 | Market Wizard | All Rights Reserved |
-          <a href="https://reactbd.com/" target="_blank" rel="noreferrer">
-            <span className="ml-1 font-medium group-hover:text-primeColor">
-              Powered by wasimteach.blogspot.com
-            </span>
-          </a>
+          Copyright 2024 | Market Wizard | All Rights Reserved
         </p>
       </div>
     </div>

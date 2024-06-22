@@ -32,6 +32,7 @@ const CreateProduct = ({ edit }) => {
     color: "",
     description: "",
     category: "",
+    stock: "", // Added stock field
   });
 
   const [errors, setErrors] = useState({});
@@ -66,6 +67,7 @@ const CreateProduct = ({ edit }) => {
     if (!formData.color) newErrors.color = "Select a color";
     if (!formData.description) newErrors.description = "Enter a description";
     if (!formData.category) newErrors.category = "Enter a category";
+    if (!formData.stock) newErrors.stock = "Enter the stock quantity"; // Added stock validation
     return newErrors;
   };
 
@@ -174,6 +176,25 @@ const CreateProduct = ({ edit }) => {
             </div>
             <div>
               <p className="text-base font-titleFont font-semibold px-2">
+                Stock
+              </p>
+              <input
+                name="stock"
+                onChange={handleChange}
+                value={formData.stock}
+                className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
+                type="number"
+                placeholder="Enter stock quantity here"
+              />
+              {errors.stock && (
+                <p className="text-red-500 text-sm font-titleFont font-semibold mt-1 px-2 flex items-center gap-1">
+                  <span className="text-sm italic font-bold">!</span>
+                  {errors.stock}
+                </p>
+              )}
+            </div>
+            <div>
+              <p className="text-base font-titleFont font-semibold px-2">
                 Color
               </p>
               <select
@@ -206,12 +227,9 @@ const CreateProduct = ({ edit }) => {
                 value={formData.category}
                 className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
               >
-                <option value="">Select a color</option>
+                <option value="">Select a category</option>
                 <option value="Art">Art</option>
-                <option value="Handicraft">Handicraft</option>
-                {/* <option value="green">Green</option>
-                <option value="yellow">Yellow</option>
-                <option value="black">Black</option> */}
+                <option value="Craft">Craft</option>
               </select>
               {errors.category && (
                 <p className="text-red-500 text-sm font-titleFont font-semibold mt-1 px-2 flex items-center gap-1">

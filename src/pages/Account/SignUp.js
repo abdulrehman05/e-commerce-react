@@ -11,7 +11,7 @@ const SignUp = () => {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
+    phoneNo: "",
     password: "",
     address: "",
     city: "",
@@ -52,8 +52,11 @@ const SignUp = () => {
   };
   // ================= Email Validation End here ===============
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState("");
+
   const handleSignUp = async (e) => {
     try {
+      setLoading(true);
       if (checked) {
         const newErrors = {};
         if (!formData.firstName) {
@@ -67,8 +70,8 @@ const SignUp = () => {
         } else if (!EmailValidation(formData.email)) {
           newErrors.email = "Enter a valid email";
         }
-        if (!formData.phone) {
-          newErrors.phone = "Enter your phone number";
+        if (!formData.phoneNo) {
+          newErrors.phoneNo = "Enter your phone number";
         }
         if (!formData.password) {
           newErrors.password = "Create a password";
@@ -101,13 +104,13 @@ const SignUp = () => {
         await dispatch(signupUser(formDataToSend));
 
         setSuccessMsg(
-          `Hello dear ${formData.firstName} ${formData.lastName}, Welcome to the OREBI Admin panel. We received your sign-up request. We are processing to validate your access. Stay connected, and additional assistance will be sent to you via email at ${formData.email}`
+          `Hello dear ${formData.firstName} ${formData.lastName}, Welcome to Market Wizards. We have received your sign-up request. Verify your email at ${formData.email} to continue to sign in.`
         );
         setFormData({
           firstName: "",
           lastName: "",
           email: "",
-          phone: "",
+          phoneNo: "",
           password: "",
           address: "",
           city: "",
@@ -115,7 +118,11 @@ const SignUp = () => {
           zip: "",
         });
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+
+      setErrors({ zip: error.message });
       console.error(error);
     }
   };
@@ -298,17 +305,17 @@ const SignUp = () => {
                     Phone
                   </p>
                   <input
-                    name="phone"
+                    name="phoneNo"
                     onChange={handleChange}
-                    value={formData.phone}
+                    value={formData.phoneNo}
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                     type="text"
                     placeholder="eg. +123456789"
                   />
-                  {errors.phone && (
+                  {errors.phoneNo && (
                     <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
                       <span className="font-bold italic mr-1">!</span>
-                      {errors.phone}
+                      {errors.phoneNo}
                     </p>
                   )}
                 </div>
@@ -438,8 +445,9 @@ const SignUp = () => {
                   className={`${
                     checked
                       ? "bg-primeColor hover:bg-black hover:text-white cursor-pointer"
-                      : "bg-gray-500 hover:bg-gray-500 hover:text-gray-200 cursor-none"
+                      : "bg-gray-500 hover:bg-gray-500 hover:text-gray-200 cursor-not-allowed"
                   } w-full text-gray-200 text-base font-medium h-10 rounded-md hover:text-white duration-300`}
+                  style={loading ? { background: "gray" } : {}}
                 >
                   Sign Up
                 </button>

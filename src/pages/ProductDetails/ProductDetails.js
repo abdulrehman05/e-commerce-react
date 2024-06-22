@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import ProductInfo from "../../components/pageProps/productDetails/ProductInfo";
 import ProductsOnSale from "../../components/pageProps/productDetails/ProductsOnSale";
 import { addToCart, getCart } from "../../redux/actionReducers";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const [prevLocation, setPrevLocation] = useState("");
-  const [productInfo, setProductInfo] = useState([]);
-
+  // const [productInfo, setProductInfo] = useState([]);
+  const { productId } = useParams();
+  const { products } = useSelector((state) => state.product);
+  const productInfo =
+    (products &&
+      products.length > 0 &&
+      products.find((product) => product?.product?._id === productId)
+        ?.product) ||
+    {};
   useEffect(() => {
-    setProductInfo(location.state.item);
+    // setProductInfo(location.state.item);
     setPrevLocation(location.pathname);
-  }, [location, productInfo]);
+  }, [location]);
 
   const addProductToCart = async () => {
     try {
@@ -42,7 +49,8 @@ const ProductDetails = () => {
           </div>
           <div className="h-full xl:col-span-2">
             <img
-              className="w-full h-full object-cover"
+              className="w-full object-cover"
+              style={{ aspectRatio: "1 / 1" }}
               src={
                 process.env.REACT_APP_BACKEND_IMAGE_LINK +
                 productInfo?.ImageFileName

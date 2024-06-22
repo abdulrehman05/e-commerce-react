@@ -30,8 +30,10 @@ const SignIn = () => {
   const userInfo = useSelector((state) => state.user.userInfo);
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState("");
   const handleSignIn = async (e) => {
     try {
+      setLoading(true);
       e.preventDefault();
 
       if (!email) {
@@ -48,10 +50,14 @@ const SignIn = () => {
         // );
         await dispatch(loginUser({ email, password }));
         router("/");
+        setLoading(false);
+
         setEmail("");
         setPassword("");
       }
     } catch (err) {
+      setLoading(false);
+
       setErrPassword(err.message);
     }
   };
@@ -154,7 +160,7 @@ const SignIn = () => {
                 {/* Email */}
                 <div className="flex flex-col gap-.5">
                   <p className="font-titleFont text-base font-semibold text-gray-600">
-                    Work Email
+                    Email
                   </p>
                   <input
                     onChange={handleEmail}
@@ -194,6 +200,7 @@ const SignIn = () => {
                 <button
                   onClick={handleSignIn}
                   className="bg-primeColor hover:bg-black text-gray-200 hover:text-white cursor-pointer w-full text-base font-medium h-10 rounded-md  duration-300"
+                  style={loading ? { background: "gray" } : {}}
                 >
                   Sign In
                 </button>

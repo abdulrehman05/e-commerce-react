@@ -54,7 +54,7 @@ const NewArrivals = () => {
       <Slider {...settings}>
         {products &&
           products.length > 0 &&
-          products
+          [...products]
             .sort(() => Math.random() - 0.5)
             .map((item) => (
               <div key={item._id} className="px-2">

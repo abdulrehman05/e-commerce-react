@@ -37,7 +37,7 @@ const HeaderBottom = () => {
     const filtered =
       (products &&
         products.length > 0 &&
-        products.filter((item) =>
+        [...products].filter((item) =>
           item?.product?.title.toLowerCase().includes(searchQuery.toLowerCase())
         )) ||
       [];
@@ -94,11 +94,11 @@ const HeaderBottom = () => {
                 </li>
                 <li
                   onClick={() => {
-                    handleCategoryClick("Handicraft");
+                    handleCategoryClick("Craft");
                   }}
                   className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer"
                 >
-                  Handicraft
+                  Craft
                 </li>
               </motion.ul>
             )}

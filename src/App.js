@@ -94,7 +94,7 @@ const router = createBrowserRouter(
           element={<PrivateRoute element={<Offer />} />}
         ></Route> */}
         <Route
-          path="/product/:_id"
+          path="/product/:productId"
           element={<PrivateRoute element={<ProductDetails />} />}
         ></Route>
         <Route

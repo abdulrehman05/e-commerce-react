@@ -1,6 +1,6 @@
 import React from "react";
 import { ImCross } from "react-icons/im";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   deleteItem,
   drecreaseQuantity,
@@ -32,6 +32,16 @@ const ItemCard = ({ product, item }) => {
       await dispatch(getCart());
     } catch (error) {}
   };
+  const { cartItems } = useSelector((state) => state.cart);
+
+  let currentStock = product?.stock;
+  cartItems &&
+    cartItems.length > 0 &&
+    cartItems.map((e) => {
+      if (e?.productId === product?._id) {
+        currentStock -= e?.quantity;
+      }
+    });
   return (
     <div className="w-full grid grid-cols-5 mb-4 border py-2">
       <div className="flex col-span-5 mdl:col-span-2 items-center gap-4 ml-4">
@@ -60,12 +70,16 @@ const ItemCard = ({ product, item }) => {
             -
           </span>
           <p>{item?.quantity}</p>
-          <span
-            onClick={() => addProductToCart()}
-            className="w-6 h-6 bg-gray-100 text-2xl flex items-center justify-center hover:bg-gray-300 cursor-pointer duration-300 border-[1px] border-gray-300 hover:border-gray-300"
-          >
-            +
-          </span>
+          {currentStock && currentStock > 0 ? (
+            <span
+              onClick={() => addProductToCart()}
+              className="w-6 h-6 bg-gray-100 text-2xl flex items-center justify-center hover:bg-gray-300 cursor-pointer duration-300 border-[1px] border-gray-300 hover:border-gray-300"
+            >
+              +
+            </span>
+          ) : (
+            "Only " + product?.stock + " in stock"
+          )}
         </div>
         <div className="w-1/3 flex items-center font-titleFont font-bold text-lg">
           <p>${item?.totalPrice}</p>

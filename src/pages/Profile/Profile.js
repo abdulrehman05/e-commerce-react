@@ -100,10 +100,10 @@ const Profile = () => {
             ) : (
               <img
                 src={
-                  userInfo.imageUploadName === "dummy"
+                  userInfo.profileImageName === "dummy"
                     ? "/empty-profile.png"
                     : process.env.REACT_APP_BACKEND_IMAGE_LINK +
-                      userInfo.imageUploadName
+                      userInfo.profileImageName
                 }
                 height={120}
                 style={{
@@ -237,9 +237,9 @@ const Profile = () => {
             <button
               onClick={handleSave}
               className={
-                "w-24 h-10 bg-primeColor text-white hover:bg-black duration-300 " +
-                (loading ? " bg-gray" : "")
+                "w-24 h-10 bg-primeColor text-white hover:bg-black duration-300 "
               }
+              style={loading ? { background: "gray" } : {}}
             >
               Save
             </button>
@@ -271,11 +271,21 @@ const Profile = () => {
           </span>
         </h1>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lgl:grid-cols-3 xl:grid-cols-4 gap-10">
-          {myProducts?.products &&
-            myProducts?.products.length > 0 &&
+          {myProducts?.products && myProducts?.products.length > 0 ? (
             myProducts?.products.map((e) => {
               return <Product product={e?.product} edit />;
-            })}
+            })
+          ) : (
+            <span>
+              No products here. &nbsp;&nbsp;&nbsp;
+              <Link
+                to="/create-product"
+                style={{ textDecoration: "underline" }}
+              >
+                Create a product
+              </Link>
+            </span>
+          )}
         </div>
       </div>
     </div>

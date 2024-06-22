@@ -9,7 +9,9 @@ import ItemCard from "./ItemCard";
 import {
   checkoutCart,
   emptyAllFromCart,
+  fetchProducts,
   getCart,
+  getMyProducts,
 } from "../../redux/actionReducers";
 
 const Cart = () => {
@@ -49,6 +51,8 @@ const Cart = () => {
       setError("");
       await dispatch(checkoutCart());
       await dispatch(getCart());
+      dispatch(fetchProducts());
+      dispatch(getMyProducts());
       setCheckedOut(true);
     } catch (error) {
       setError(error.message);
