@@ -117,7 +117,7 @@ const Footer = () => {
               <Link to="/shop">Shop</Link>
             </li>
             <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              <Link to="/about">Contact</Link>
+              <Link to="/about">About</Link>
             </li>
             {/* <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
               Home appliances
