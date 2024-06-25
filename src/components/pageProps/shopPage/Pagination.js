@@ -65,7 +65,7 @@ const Pagination = ({ itemsPerPage }) => {
         : true
     );
   const currentItems = [...currentProducts].slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(products?.length || 0 / itemsPerPage);
+  const pageCount = Math.ceil((products?.length || 0) / itemsPerPage);
 
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
