@@ -3,6 +3,7 @@ import { BsGridFill } from "react-icons/bs";
 import { ImList } from "react-icons/im";
 import { GoTriangleDown } from "react-icons/go";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const ProductBanner = ({ itemsPerPageFromBanner }) => {
   //   const [selected, setSelected] = useState("");
@@ -16,12 +17,13 @@ const ProductBanner = ({ itemsPerPageFromBanner }) => {
       setListViewActive(false);
       setGridViewActive(true);
     });
-    listView.addEventListener("click", () => {
-      setGridViewActive(false);
-      setListViewActive(true);
-    });
+    // listView.addEventListener("click", () => {
+    //   setGridViewActive(false);
+    //   setListViewActive(true);
+    // });
   }, [girdViewActive, listViewActive]);
 
+  const { userInfo } = useSelector((state) => state.user);
   return (
     <div className="w-full flex flex-col md:flex-row md:items-center justify-between">
       {/* =========================================================
@@ -38,7 +40,7 @@ const ProductBanner = ({ itemsPerPageFromBanner }) => {
         >
           <BsGridFill />
         </span>
-        <span
+        {/* <span
           className={`${
             listViewActive
               ? "bg-primeColor text-white"
@@ -46,7 +48,7 @@ const ProductBanner = ({ itemsPerPageFromBanner }) => {
           } w-8 h-8 text-base flex items-center justify-center cursor-pointer listView`}
         >
           <ImList />
-        </span>
+        </span> */}
       </div>
       {/* =========================================================
                             Left Part End here
@@ -55,7 +57,7 @@ const ProductBanner = ({ itemsPerPageFromBanner }) => {
                             Right Part STart here
         ======================================================== */}
       <div className="flex items-center gap-2 md:gap-6 mt-4 md:mt-0">
-        <div className="flex items-center gap-2 text-base text-[#767676] relative">
+        {/* <div className="flex items-center gap-2 text-base text-[#767676] relative">
           <label className="block">Sort by:</label>
           <select
             // onChange={(e) => setSelected(e.target.value)}
@@ -70,7 +72,7 @@ const ProductBanner = ({ itemsPerPageFromBanner }) => {
           <span className="absolute text-sm right-2 md:right-4 top-2.5">
             <GoTriangleDown />
           </span>
-        </div>
+        </div> */}
         <div className="flex items-center gap-2 text-[#767676] relative">
           <label className="block">Show:</label>
           <div style={{ position: "relative" }}>
@@ -90,11 +92,13 @@ const ProductBanner = ({ itemsPerPageFromBanner }) => {
             </span>
           </div>
 
-          <Link to="/create-product">
-            <button className="w-full py-2 px-2 bg-primeColor hover:bg-black duration-300 text-white text-lg font-titleFont">
-              Create Product
-            </button>
-          </Link>
+          {userInfo && (
+            <Link to="/create-product">
+              <button className="w-full py-2 px-2 bg-primeColor hover:bg-black duration-300 text-white text-lg font-titleFont">
+                Create Product
+              </button>
+            </Link>
+          )}
         </div>
       </div>
       {/* =========================================================

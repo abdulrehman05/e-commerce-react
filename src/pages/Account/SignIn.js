@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { logoLight } from "../../assets/images";
 import { loginUser } from "../../redux/actionReducers";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,6 +31,7 @@ const SignIn = () => {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState("");
+  const [searchParams] = useSearchParams();
   const handleSignIn = async (e) => {
     try {
       setLoading(true);
@@ -49,7 +50,11 @@ const SignIn = () => {
         //   `Hello dear, Thank you for your attempt. We are processing to validate your access. Till then stay connected and additional assistance will be sent to you by your mail at ${email}`
         // );
         await dispatch(loginUser({ email, password }));
-        router("/");
+        if (addToCart) {
+          router("/product/" + addToCart);
+        } else {
+          router("/");
+        }
         setLoading(false);
 
         setEmail("");
@@ -62,6 +67,7 @@ const SignIn = () => {
     }
   };
 
+  const addToCart = searchParams.get("addToCart");
   useEffect(() => {
     if (userInfo && userInfo.email && userInfo.token) {
       router("/");
@@ -154,7 +160,7 @@ const SignIn = () => {
           <form className="w-full lgl:w-[450px] h-screen flex items-center justify-center">
             <div className="px-6 py-4 w-full h-[90%] flex flex-col justify-center overflow-y-scroll scrollbar-thin scrollbar-thumb-primeColor">
               <h1 className="font-titleFont underline underline-offset-4 decoration-[1px] font-semibold text-3xl mdl:text-4xl mb-4">
-                Sign in
+                Sign in {addToCart && " To Add To Cart"}
               </h1>
               <div className="flex flex-col gap-3">
                 {/* Email */}

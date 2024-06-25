@@ -49,7 +49,7 @@ const Pagination = ({ itemsPerPage }) => {
       categories.length > 0 ? categories.includes(e?.product?.category) : true
     )
     .filter((e) =>
-      prices.length > 0
+      prices && prices?.length > 0
         ? prices.some((price) => {
             const seperatedPrices = (price && price.split("-")) || [
               "100",
@@ -65,7 +65,7 @@ const Pagination = ({ itemsPerPage }) => {
         : true
     );
   const currentItems = [...currentProducts].slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(products.length / itemsPerPage);
+  const pageCount = Math.ceil(products?.length || 0 / itemsPerPage);
 
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
@@ -98,7 +98,7 @@ const Pagination = ({ itemsPerPage }) => {
           {endOffset <= currentProducts?.length || 0
             ? endOffset
             : currentProducts?.length || 0}{" "}
-          of {currentProducts.length}
+          of {currentProducts?.length || 0}
         </p>
       </div>
     </div>

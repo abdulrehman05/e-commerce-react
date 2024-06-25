@@ -60,7 +60,7 @@ const Category = () => {
       // Category not selected, add it
       currentCategories.push(title);
     }
-    if (currentCategories.length > 0) {
+    if (currentCategories && currentCategories.length > 0) {
       searchParams.set("categories", currentCategories.join(","));
     } else {
       searchParams.delete("categories");

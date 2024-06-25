@@ -57,16 +57,45 @@ const PrivateRoute = ({ element }) => {
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
-      <Route path="/" element={<PrivateRoute element={<Layout />} />}>
+      <Route
+        path="/"
+        element={
+          // <PrivateRoute
+          //  element={
+          <Layout />
+          // }
+          // />
+        }
+      >
         {/* ==================== Header Navlink Start here =================== */}
-        <Route index element={<PrivateRoute element={<Home />} />}></Route>
+        <Route
+          index
+          element={
+            // <PrivateRoute element={
+            <Home />
+            // }
+            // />
+          }
+        ></Route>
         <Route
           path="/shop"
-          element={<PrivateRoute element={<Shop />} />}
+          element={
+            // <PrivateRoute
+            // element={
+            <Shop />
+            // }
+            //   />
+          }
         ></Route>
         <Route
           path="/about"
-          element={<PrivateRoute element={<About />} />}
+          element={
+            // <PrivateRoute
+            // element={
+            <About />
+            // }
+            //   />
+          }
         ></Route>
         <Route
           path="/profile"
@@ -95,7 +124,13 @@ const router = createBrowserRouter(
         ></Route> */}
         <Route
           path="/product/:productId"
-          element={<PrivateRoute element={<ProductDetails />} />}
+          element={
+            // <PrivateRoute
+            // element={
+            <ProductDetails />
+            // }
+            //   />
+          }
         ></Route>
         <Route
           path="/cart"

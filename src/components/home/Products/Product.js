@@ -93,6 +93,9 @@ const Product = ({ product, edit }) => {
 
   const addProductToCart = async () => {
     try {
+      if (!userInfo) {
+        navigate("/signin?addToCart=" + product?._id);
+      }
       await dispatch(addToCart(product?._id, 1));
       await dispatch(getCart());
     } catch (error) {}
@@ -119,6 +122,7 @@ const Product = ({ product, edit }) => {
         currentStock -= e?.quantity;
       }
     });
+  const { userInfo } = useSelector((state) => state.user);
   return (
     <div className="w-full relative group">
       <div className="max-w-80 max-h-80 relative overflow-y-hidden">

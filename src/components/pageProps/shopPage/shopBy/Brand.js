@@ -43,7 +43,7 @@ const Brand = () => {
       // Brand not selected, add it
       currentBrands.push(title);
     }
-    if (currentBrands.length > 0) {
+    if (currentBrands && currentBrands.length > 0) {
       searchParams.set("brands", currentBrands.join(","));
     } else {
       searchParams.delete("brands");

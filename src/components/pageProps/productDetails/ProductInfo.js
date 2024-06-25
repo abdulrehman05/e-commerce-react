@@ -7,12 +7,18 @@ import {
   reviewProduct,
 } from "../../../redux/actionReducers";
 import { FaStar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const ProductInfo = ({ productInfo }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const { userInfo } = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const addProductToCart = async () => {
     try {
+      if (!userInfo) {
+        navigate("/signin?addToCart=" + productInfo?._id);
+      }
       setLoading(true);
       await dispatch(addToCart(productInfo?._id, 1));
       await dispatch(getCart());

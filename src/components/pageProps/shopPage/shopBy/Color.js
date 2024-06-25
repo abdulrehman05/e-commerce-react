@@ -7,7 +7,7 @@ const Color = () => {
   const [showColors, setShowColors] = useState(true);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   const colors = [
     {
       _id: 9001,
@@ -48,7 +48,7 @@ const Color = () => {
       // Color not selected, add it
       currentColors.push(title);
     }
-    if (currentColors.length > 0) {
+    if (currentColors && currentColors.length > 0) {
       searchParams.set("colors", currentColors.join(","));
     } else {
       searchParams.delete("colors");

@@ -47,12 +47,12 @@ export const fetchProducts = () => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_PRODUCTS_REQUEST });
     const headers = {
-      Authorization: getState().user.userInfo.token,
+      Authorization: getState()?.user?.userInfo?.token,
     };
     const { data } = await axios.get(
       process.env.REACT_APP_BACKEND + "/api/products/get-all",
       {
-        headers: headers,
+        // headers: headers,
       }
     );
     dispatch({ type: GET_PRODUCTS_SUCCESS, payload: data?.data });
@@ -76,7 +76,7 @@ export const getMyProducts = () => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_MY_PRODUCTS_REQUEST });
     const headers = {
-      Authorization: getState().user.userInfo.token,
+      Authorization: getState()?.user?.userInfo?.token,
     };
     const { data } = await axios.get(
       process.env.REACT_APP_BACKEND + "/api/products/user-products",
@@ -192,7 +192,7 @@ export const contactUsAction =
     try {
       // dispatch({ type: SIGNUP_USER_REQUEST });
       const headers = {
-        Authorization: getState().user.userInfo.token,
+        Authorization: getState()?.user?.userInfo?.token,
       };
       const { data } = await axios.post(
         process.env.REACT_APP_BACKEND + "/api/contact-us",
@@ -227,7 +227,7 @@ export const updateUser = (userDetails) => async (dispatch, getState) => {
   try {
     // dispatch({ type: SIGNUP_USER_REQUEST });
     const headers = {
-      Authorization: getState().user.userInfo.token,
+      Authorization: getState()?.user?.userInfo?.token,
     };
     const { data } = await axios.post(
       process.env.REACT_APP_BACKEND + "/api/auth/update",
@@ -262,7 +262,7 @@ export const updateUser = (userDetails) => async (dispatch, getState) => {
 export const deleteProduct = (productId) => async (dispatch, getState) => {
   try {
     const headers = {
-      Authorization: getState().user.userInfo.token,
+      Authorization: getState()?.user?.userInfo?.token,
     };
     // dispatch({ type: CREATE_PRODUCT_REQUEST });
     const { data } = await axios.delete(
@@ -289,7 +289,7 @@ export const updateProduct =
   (formData, productId) => async (dispatch, getState) => {
     try {
       const headers = {
-        Authorization: getState().user.userInfo.token,
+        Authorization: getState()?.user?.userInfo?.token,
       };
       // dispatch({ type: CREATE_PRODUCT_REQUEST });
       const { data } = await axios.put(
@@ -317,7 +317,7 @@ export const updateProduct =
 export const checkoutCart = () => async (dispatch, getState) => {
   try {
     const headers = {
-      Authorization: getState().user.userInfo.token,
+      Authorization: getState()?.user?.userInfo?.token,
     };
     // dispatch({ type: CREATE_PRODUCT_REQUEST });
     const { data } = await axios.post(
@@ -345,7 +345,7 @@ export const checkoutCart = () => async (dispatch, getState) => {
 export const createProduct = (productDetails) => async (dispatch, getState) => {
   try {
     const headers = {
-      Authorization: getState().user.userInfo.token,
+      Authorization: getState()?.user?.userInfo?.token,
     };
     dispatch({ type: CREATE_PRODUCT_REQUEST });
     const { data } = await axios.post(
@@ -374,7 +374,7 @@ export const getCart = () => async (dispatch, getState) => {
   try {
     dispatch({ type: GET_CART_REQUEST });
     const headers = {
-      Authorization: getState().user.userInfo.token,
+      Authorization: getState()?.user?.userInfo?.token,
     };
     const { data } = await axios.get(
       process.env.REACT_APP_BACKEND + "/api/cart/getCart",
@@ -402,7 +402,7 @@ export const addToCart =
     try {
       dispatch({ type: ADD_TO_CART_REQUEST });
       const headers = {
-        Authorization: getState().user.userInfo.token,
+        Authorization: getState()?.user?.userInfo?.token,
       };
       await axios.post(
         `${process.env.REACT_APP_BACKEND}/api/cart/${productId}/add`,
@@ -431,7 +431,7 @@ export const reviewProduct =
     try {
       dispatch({ type: ADD_TO_CART_REQUEST });
       const headers = {
-        Authorization: getState().user.userInfo.token,
+        Authorization: getState()?.user?.userInfo?.token,
       };
       await axios.put(
         `${process.env.REACT_APP_BACKEND}/api/products/${productId}/add-rating`,
@@ -460,7 +460,7 @@ export const decreaseFromCart =
     try {
       dispatch({ type: ADD_TO_CART_REQUEST });
       const headers = {
-        Authorization: getState().user.userInfo.token,
+        Authorization: getState()?.user?.userInfo?.token,
       };
       await axios.post(
         `${process.env.REACT_APP_BACKEND}/api/cart/${productId}/decrease`,
@@ -487,7 +487,7 @@ export const emptyAllFromCart = () => async (dispatch, getState) => {
   try {
     dispatch({ type: ADD_TO_CART_REQUEST });
     const headers = {
-      Authorization: getState().user.userInfo.token,
+      Authorization: getState()?.user?.userInfo?.token,
     };
     await axios.post(
       `${process.env.REACT_APP_BACKEND}/api/cart/empty-cart`,
@@ -515,7 +515,7 @@ export const decreaseQuantity = (productId) => async (dispatch, getState) => {
   try {
     dispatch({ type: DECREASE_QUANTITY_REQUEST });
     const headers = {
-      Authorization: getState().user.userInfo.token,
+      Authorization: getState()?.user?.userInfo?.token,
     };
     await axios.post(
       `${process.env.REACT_APP_BACKEND}/api/cart/${productId}/decrease`,
@@ -544,7 +544,7 @@ export const removeFromCart = (productId) => async (dispatch, getState) => {
   try {
     dispatch({ type: REMOVE_FROM_CART_REQUEST });
     const headers = {
-      Authorization: getState().user.userInfo.token,
+      Authorization: getState()?.user?.userInfo?.token,
     };
     await axios.post(
       `${process.env.REACT_APP_BACKEND}/api/cart/remove`,

@@ -30,7 +30,13 @@ const Profile = () => {
 
       const formDataToSend = new FormData();
       Object.keys(editInfo).forEach((key) => {
-        formDataToSend.append(key, editInfo[key]);
+        if (editInfo[key] && editInfo[key] !== "-") {
+          formDataToSend.append(key, editInfo[key]);
+        } else {
+          if (key !== "imageUpload") {
+            formDataToSend.append(key, "-");
+          }
+        }
       });
 
       await dispatch(updateUser(formDataToSend));

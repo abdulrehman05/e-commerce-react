@@ -27,7 +27,7 @@ const HeaderBottom = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [showSearchBar, setShowSearchBar] = useState(false);
-  const state = useSelector((state) => state);
+  const { userInfo } = useSelector((state) => state.user);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -57,7 +57,7 @@ const HeaderBottom = () => {
       // Category not selected, add it
       currentCategories.push(title);
     }
-    if (currentCategories.length > 0) {
+    if (currentCategories && currentCategories?.length > 0) {
       searchParams.set("categories", currentCategories.join(","));
     } else {
       searchParams.delete("categories");
@@ -174,44 +174,53 @@ const HeaderBottom = () => {
                 transition={{ duration: 0.5 }}
                 className="absolute top-6 left-0 z-50 bg-primeColor w-44 text-[#767676] h-auto p-4 pb-6"
               >
-                {/* <Link to="/signin">
-                  <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                    Login
-                  </li>
-                </Link>
-                <Link onClick={() => setShowUser(false)} to="/signup">
+                {!userInfo && (
+                  <Link to="/signin">
+                    <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
+                      Login
+                    </li>
+                  </Link>
+                )}
+                {/* <Link onClick={() => setShowUser(false)} to="/signup">
                   <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
                     Sign Up
                   </li>
                 </Link> */}
-                <Link to="/profile">
-                  <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                    Profile
-                  </li>
-                </Link>
-                {/* <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400  hover:border-b-white hover:text-white duration-300 cursor-pointer">
+                {userInfo && (
+                  <>
+                    <Link to="/profile">
+                      <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
+                        Profile
+                      </li>
+                    </Link>
+                    {/* <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400  hover:border-b-white hover:text-white duration-300 cursor-pointer">
                   Others
                 </li> */}
-                <li
-                  onClick={() => {
-                    dispatch(logout());
-                  }}
-                  className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400  hover:border-b-white hover:text-white duration-300 cursor-pointer"
-                >
-                  Log out
-                </li>
+                    <li
+                      onClick={() => {
+                        dispatch(logout());
+                        navigate("/signin");
+                      }}
+                      className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400  hover:border-b-white hover:text-white duration-300 cursor-pointer"
+                    >
+                      Log out
+                    </li>
+                  </>
+                )}
               </motion.ul>
             )}
-            <Link to="/cart">
-              <div className="relative">
-                <FaShoppingCart />
-                <span className="absolute font-titleFont top-3 -right-2 text-xs w-4 h-4 flex items-center justify-center rounded-full bg-primeColor text-white">
-                  {cart?.cartItems && cart?.cartItems.length > 0
-                    ? cart?.cartItems.length
-                    : 0}
-                </span>
-              </div>
-            </Link>
+            {userInfo && (
+              <Link to="/cart">
+                <div className="relative">
+                  <FaShoppingCart />
+                  <span className="absolute font-titleFont top-3 -right-2 text-xs w-4 h-4 flex items-center justify-center rounded-full bg-primeColor text-white">
+                    {cart?.cartItems && cart?.cartItems.length > 0
+                      ? cart?.cartItems.length
+                      : 0}
+                  </span>
+                </div>
+              </Link>
+            )}
           </div>
         </Flex>
       </div>
