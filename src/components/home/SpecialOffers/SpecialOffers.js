@@ -19,6 +19,7 @@ const SpecialOffers = () => {
           products.length > 0 &&
           [...products]
             .sort(() => Math.random() - 0.5)
+    .splice(0, 4)
             .map((item) => (
               <div key={item._id} className="px-2">
                 <Product product={item?.product} />
